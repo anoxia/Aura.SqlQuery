@@ -9,14 +9,12 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common;
 
-use Aura\SqlQuery\AbstractBuilder;
-
 /**
  * Common UPDATE builder.
  *
  * @package Aura.SqlQuery
  */
-class UpdateBuilder extends AbstractBuilder
+class UpdateBuilder extends Basic\Builder
 {
     /**
      * Builds the table portion of the UPDATE.

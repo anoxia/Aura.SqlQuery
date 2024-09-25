@@ -9,29 +9,28 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common;
 
-use Aura\SqlQuery\AbstractBuilder;
-use Aura\SqlQuery\Exception;
+use Aura\SqlQuery\AuraSqlQueryException;
+use Aura\SqlQuery\Common\Basic\Builder;
+use Aura\SqlQuery\Common\Basic\BuilderInterface;
 
 /**
  * Common SELECT builder.
  *
  * @package Aura.SqlQuery
  */
-class SelectBuilder extends AbstractBuilder implements BuilderInterface
+class SelectBuilder extends Builder implements BuilderInterface
 {
     /**
      * Builds the columns portion of the SELECT.
      *
-     * @param array $cols the columns
+     * @param string[] $cols the columns
      *
-     * @return string
-     *
-     * @throws Exception when there are no columns in the SELECT
+     * @throws AuraSqlQueryException when there are no columns in the SELECT
      */
-    public function buildCols(array $cols)
+    public function buildCols(array $cols): string
     {
         if (empty($cols)) {
-            throw new Exception('No columns in the SELECT.');
+            throw new AuraSqlQueryException('No columns in the SELECT.');
         }
         return $this->indentCsv($cols);
     }
@@ -41,10 +40,8 @@ class SelectBuilder extends AbstractBuilder implements BuilderInterface
      *
      * @param array $from the FROM elements
      * @param array $join the JOIN elements
-     *
-     * @return string
      */
-    public function buildFrom(array $from, array $join)
+    public function buildFrom(array $from, array $join): string
     {
         if (empty($from)) {
             return ''; // not applicable
@@ -64,10 +61,8 @@ class SelectBuilder extends AbstractBuilder implements BuilderInterface
      * Builds the GROUP BY clause.
      *
      * @param array $group_by the GROUP BY elements
-     *
-     * @return string
      */
-    public function buildGroupBy(array $group_by)
+    public function buildGroupBy(array $group_by): string
     {
         if (empty($group_by)) {
             return ''; // not applicable
@@ -80,10 +75,8 @@ class SelectBuilder extends AbstractBuilder implements BuilderInterface
      * Builds the HAVING clause.
      *
      * @param array $having the HAVING elements
-     *
-     * @return string
      */
-    public function buildHaving(array $having)
+    public function buildHaving(array $having): string
     {
         if (empty($having)) {
             return ''; // not applicable
@@ -96,10 +89,8 @@ class SelectBuilder extends AbstractBuilder implements BuilderInterface
      * Builds the FOR UPDATE portion of the SELECT.
      *
      * @param bool $for_update true if FOR UPDATE, false if not
-     *
-     * @return string
      */
-    public function buildForUpdate($for_update)
+    public function buildForUpdate($for_update): string
     {
         if (! $for_update) {
             return ''; // not applicable

@@ -19,7 +19,7 @@ interface OrderByInterface
     /**
      * Adds a column order to the query.
      *
-     * @param array $spec the columns and direction to order by
+     * @param string[] $spec the columns and direction to order by
      */
     public function orderBy(array $spec): self;
 }

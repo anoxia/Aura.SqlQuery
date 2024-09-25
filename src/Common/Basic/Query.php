@@ -7,10 +7,9 @@ declare(strict_types=1);
  * @license http://opensource.org/licenses/mit-license.php MIT
  */
 
-namespace Aura\SqlQuery;
+namespace Aura\SqlQuery\Common\Basic;
 
 use Aura\SqlQuery\Common\AbstractBuilder;
-use Aura\SqlQuery\Common\BuilderInterface;
 use Aura\SqlQuery\Common\SelectInterface;
 use Aura\SqlQuery\Common\QuoterInterface;
 
@@ -19,7 +18,7 @@ use Aura\SqlQuery\Common\QuoterInterface;
  *
  * @package Aura.SqlQuery
  */
-abstract class AbstractQuery
+abstract class Query implements QueryInterface
 {
     /**
      * Data to be bound to the query.
@@ -55,11 +54,11 @@ abstract class AbstractQuery
      * @param QuoterInterface $quoter  a helper for quoting identifier names
      * @param AbstractBuilder $builder a builder for the query
      */
-    public function __construct(
-        protected QuoterInterface $quoter,
-        protected BuilderInterface $builder,
-    ) {
-    }
+    // public function __construct(
+    //     protected QuoterInterface $quoter,
+    //     protected BuilderInterface $builder,
+    // ) {
+    // }
 
     /**
      * Returns this query object as an SQL statement string.

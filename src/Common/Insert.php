@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Aura\SqlQuery\Common;
 
 use Aura\SqlQuery\AbstractDmlQuery;
-use Aura\SqlQuery\Exception;
+use Aura\SqlQuery\AuraSqlQueryException;
 
 /**
  * An object for INSERT queries.
@@ -38,7 +38,7 @@ class Insert extends AbstractDmlQuery implements InsertInterface
      * This is used to look up the right last-insert-id name for a given table
      * and column. Generally useful only for extended tables in Postgres.
      *
-     * @var array
+     * @var array<string,mixed>
      */
     protected $last_insert_id_names;
 
@@ -99,10 +99,8 @@ class Insert extends AbstractDmlQuery implements InsertInterface
 
     /**
      * Builds this query object into a string.
-     *
-     * @return string
      */
-    protected function build()
+    protected function build(): string
     {
         $stm = 'INSERT'
             . $this->builder->buildFlags($this->flags)
@@ -224,11 +222,11 @@ class Insert extends AbstractDmlQuery implements InsertInterface
      */
     public function addRow(array $cols = [])
     {
-        if (empty($this->col_values)) {
+        if ([] === $this->col_values) {
             return $this->cols($cols);
         }
 
-        if (empty($this->col_order)) {
+        if ([] === $this->col_order) {
             $this->col_order = \array_keys($this->col_values);
         }
 
@@ -242,7 +240,7 @@ class Insert extends AbstractDmlQuery implements InsertInterface
      * Finishes off the current row in a bulk insert, collecting the bulk
      * values and resetting for the next row.
      */
-    protected function finishRow()
+    protected function finishRow(): void
     {
         if (empty($this->col_values)) {
             return;
@@ -263,10 +261,10 @@ class Insert extends AbstractDmlQuery implements InsertInterface
      *
      * @throws Exception on named column missing from row
      */
-    protected function finishCol($col)
+    protected function finishCol($col): void
     {
         if (! \array_key_exists($col, $this->col_values)) {
-            throw new Exception("Column {$col} missing from row {$this->row}.");
+            throw new AuraSqlQueryException("Column {$col} missing from row {$this->row}.");
         }
 
         // get the current col_value

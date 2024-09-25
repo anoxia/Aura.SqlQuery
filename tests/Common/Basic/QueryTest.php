@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Aura\SqlQuery;
+namespace Aura\SqlQuery\Common\Basic;
 
+use Aura\SqlQuery\Common\SelectInterface;
+use Aura\SqlQuery\QueryFactory;
 use PHPUnit\Framework\TestCase;
 
-abstract class AbstractQueryTest extends TestCase
+abstract class QueryTest extends TestCase
 {
     protected $query_factory;
 
@@ -14,7 +16,7 @@ abstract class AbstractQueryTest extends TestCase
 
     protected $db_type = 'Common';
 
-    protected $query;
+    protected SelectInterface $query;
 
     protected function setUp(): void
     {

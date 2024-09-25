@@ -22,18 +22,16 @@ interface InsertInterface extends QueryInterface, ValuesInterface
      * Sets the table to insert into.
      *
      * @param string $into the table to insert into
-     *
-     * @return $this
      */
-    public function into($into);
+    public function into(string $into): self;
 
     /**
      * Sets the map of fully-qualified `table.column` names to last-insert-id
      * names. Generally useful only for extended tables in Postgres.
      *
-     * @param array $last_insert_id_names the list of ID names
+     * @param array<string,mixed> $last_insert_id_names the list of ID names
      */
-    public function setLastInsertIdNames(array $last_insert_id_names);
+    public function setLastInsertIdNames(array $last_insert_id_names): void;
 
     /**
      * Returns the proper name for passing to `PDO::lastInsertId()`.
@@ -43,17 +41,15 @@ interface InsertInterface extends QueryInterface, ValuesInterface
      * @return mixed normally null, since most drivers do not need a name;
      *               alternatively, a string from `$last_insert_id_names`
      */
-    public function getLastInsertIdName($col);
+    public function getLastInsertIdName(string $col): mixed;
 
     /**
      * Adds multiple rows for bulk insert.
      *
      * @param array $rows An array of rows, where each element is an array of
      *                    column key-value pairs. The values are bound to placeholders.
-     *
-     * @return $this
      */
-    public function addRows(array $rows);
+    public function addRows(array $rows): self;
 
     /**
      * Add one row for bulk insert; increments the row counter and optionally
@@ -67,8 +63,6 @@ interface InsertInterface extends QueryInterface, ValuesInterface
      *
      * @param array $cols an array of column key-value pairs; the values are
      *                    bound to placeholders
-     *
-     * @return $this
      */
-    public function addRow(array $cols = []);
+    public function addRow(array $cols = []): self;
 }

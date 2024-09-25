@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common;
 
-use Aura\SqlQuery\QueryInterface;
+use Aura\SqlQuery\Common\Basic\QueryInterface;
 
 /**
  * An interface for SELECT queries.
@@ -111,9 +111,10 @@ interface SelectInterface extends QueryInterface, WhereInterface, OrderByInterfa
     /**
      * Adds a JOIN table and columns to the query.
      *
-     * @param string  $join the join type: inner, left, natural, etc
-     * @param string  $spec the table specification; "foo" or "foo AS bar"
-     * @param ?string $cond join on this condition
+     * @param string              $join the join type: inner, left, natural, etc
+     * @param string              $spec the table specification; "foo" or "foo AS bar"
+     * @param ?string             $cond join on this condition
+     * @param array<string,mixed> $bind values to bind to ?-placeholders in the condition
      */
     public function join(string $join, string $spec, ?string $cond = null, array $bind = []): self;
 
@@ -146,13 +147,14 @@ interface SelectInterface extends QueryInterface, WhereInterface, OrderByInterfa
      * @param string|SelectInterface $spec if a Select object, use as the sub-select; if a string, the sub-select command string
      * @param string                 $name the alias name for the sub-select
      * @param ?string                $cond join on this condition
+     * @param array<string,mixed>    $bind values to bind to ?-placeholders in the condition
      */
-    public function joinSubSelect(string $join, $spec, string $name, ?string $cond = null, array $bind = []): self;
+    public function joinSubSelect(string $join, mixed $spec, string $name, ?string $cond = null, array $bind = []): self;
 
     /**
      * Adds grouping to the query.
      *
-     * @param array $spec the column(s) to group by
+     * @param string[] $spec the column(s) to group by
      */
     public function groupBy(array $spec): self;
 

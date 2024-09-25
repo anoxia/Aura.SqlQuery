@@ -14,7 +14,7 @@ namespace Aura\SqlQuery\Common;
  *
  * @package Aura.SqlQuery
  */
-class DeleteBuilder extends AbstractBuilder
+class DeleteBuilder extends Basic\Builder
 {
     /**
      * Builds the FROM clause.

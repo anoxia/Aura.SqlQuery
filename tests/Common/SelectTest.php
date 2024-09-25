@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common;
 
-use Aura\SqlQuery\AbstractQueryTest;
+use Aura\SqlQuery\Common\Basic\QueryTest;
 
-class SelectTest extends AbstractQueryTest
+class SelectTest extends QueryTest
 {
     protected $query_type = 'select';
 
     public function testExceptionWithNoCols(): void
     {
         $this->query->from('t1');
-        $this->expectException(\Aura\SqlQuery\Exception::class);
+        $this->expectException(\Aura\SqlQuery\AuraSqlQueryException::class);
         $this->query->__toString();
-
     }
 
     public function testSetAndGetPaging(): void
@@ -1146,7 +1145,8 @@ EOD;
                 ;
             })->having(static function ($select): void {
                 // do nothing
-            });
+            })
+        ;
 
         $expect = <<<'EOD'
 

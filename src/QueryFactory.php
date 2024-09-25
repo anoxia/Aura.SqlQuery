@@ -132,7 +132,7 @@ class QueryFactory
      *
      * @param string $query the query type
      */
-    protected function newBuilder(string $query): Common\AbstractBuilder
+    protected function newBuilder(string $query): Common\Basic\Builder
     {
         $builderClass = "Aura\SqlQuery\\{$this->db}\\{$query}Builder";
         if ($this->common || ! \class_exists($builderClass)) {

@@ -7,14 +7,14 @@ declare(strict_types=1);
  * @license http://opensource.org/licenses/mit-license.php MIT
  */
 
-namespace Aura\SqlQuery;
+namespace Aura\SqlQuery\Common\Basic;
 
 /**
  * Abstract query object for data manipulation (Insert, Update, and Delete).
  *
  * @package Aura.SqlQuery
  */
-abstract class AbstractDmlQuery extends AbstractQuery
+abstract class DmlQuery extends Query
 {
     /**
      * Column values for INSERT or UPDATE queries; the key is the column name and the

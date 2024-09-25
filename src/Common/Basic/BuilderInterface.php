@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aura\SqlQuery\Common;
+namespace Aura\SqlQuery\Common\Basic;
 
 interface BuilderInterface
 {
@@ -32,7 +32,7 @@ interface BuilderInterface
      *
      * @param int $limit the LIMIT element
      */
-    public function buildLimit($limit): string;
+    public function buildLimit(int $limit): string;
 
     /**
      * Builds the `LIMIT ... OFFSET` clause of the statement.
@@ -40,7 +40,7 @@ interface BuilderInterface
      * @param int $limit  the LIMIT element
      * @param int $offset the OFFSET element
      */
-    public function buildLimitOffset($limit, $offset): string;
+    public function buildLimitOffset(int $limit, int $offset): string;
 
     /**
      * Returns an array as an indented comma-separated values string.

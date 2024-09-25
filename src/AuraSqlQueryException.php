@@ -14,6 +14,6 @@ namespace Aura\SqlQuery;
  *
  * @package Aura.SqlQuery
  */
-class Exception extends \Exception
+class AuraSqlQueryException extends \Exception
 {
 }

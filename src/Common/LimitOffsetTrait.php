@@ -40,10 +40,8 @@ trait LimitOffsetTrait
 
     /**
      * Returns the OFFSET value.
-     *
-     * @return int
      */
-    public function getOffset()
+    public function getOffset(): int
     {
         return $this->offset;
     }

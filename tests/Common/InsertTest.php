@@ -148,7 +148,7 @@ EOD;
         // failed to add c3, should blow up
 
         $this->expectException(
-            \Aura\SqlQuery\Exception::class,
+            \Aura\SqlQuery\AuraSqlQueryException::class,
             $this->requoteIdentifiers('Column <<c3>> missing from row 1.'),
         );
         $this->query->addRow();

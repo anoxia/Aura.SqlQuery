@@ -21,24 +21,20 @@ interface ValuesInterface
      * passed, that value is bound to the placeholder.
      *
      * @param string $col   the column name
-     * @param array  $value
-     *
-     * @return $this
+     * @param mixed  $value
      */
-    public function col($col, ...$value);
+    public function col(string $col, ...$value): self;
 
     /**
      * Sets multiple column value placeholders. If an element is a key-value
      * pair, the key is treated as the column name and the value is bound to
      * that column.
      *
-     * @param array $cols a list of column names, optionally as key-value
-     *                    pairs where the key is a column name and the value is a bind value for
-     *                    that column
-     *
-     * @return $this
+     * @param string[] $cols a list of column names, optionally as key-value
+     *                       pairs where the key is a column name and the value is a bind value for
+     *                       that column
      */
-    public function cols(array $cols);
+    public function cols(array $cols): self;
 
     /**
      * Sets a column value directly; the value will not be escaped, although
@@ -46,8 +42,6 @@ interface ValuesInterface
      *
      * @param string $col   the column name
      * @param string $value the column value expression
-     *
-     * @return $this
      */
-    public function set($col, $value);
+    public function set(string $col, string $value): self;
 }

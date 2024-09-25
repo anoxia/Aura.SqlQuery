@@ -38,10 +38,8 @@ trait LimitTrait
 
     /**
      * Returns the LIMIT value.
-     *
-     * @return int
      */
-    public function getLimit()
+    public function getLimit(): int
     {
         return $this->limit;
     }

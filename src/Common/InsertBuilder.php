@@ -9,14 +9,12 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common;
 
-use Aura\SqlQuery\AbstractBuilder;
-
 /**
  * Common INSERT builder.
  *
  * @package Aura.SqlQuery
  */
-class InsertBuilder extends AbstractBuilder
+class InsertBuilder extends Basic\Builder
 {
     /**
      * Builds the INTO clause.

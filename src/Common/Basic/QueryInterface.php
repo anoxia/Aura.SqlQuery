@@ -7,7 +7,7 @@ declare(strict_types=1);
  * @license http://opensource.org/licenses/mit-license.php MIT
  */
 
-namespace Aura\SqlQuery;
+namespace Aura\SqlQuery\Common\Basic;
 
 /**
  * Interface for query objects.
@@ -34,7 +34,7 @@ interface QueryInterface extends \Stringable
     /**
      * Adds values to bind into the query; merges with existing values.
      *
-     * @param array $bind_values values to bind to the query
+     * @param array<string,mixed> $bind_values values to bind to placeholders
      */
     public function bindValues(array $bind_values): self;
 
@@ -44,7 +44,7 @@ interface QueryInterface extends \Stringable
      * @param string $name  the placeholder name or number
      * @param mixed  $value the value to bind to the placeholder
      */
-    public function bindValue($name, $value): self;
+    public function bindValue(string $name, mixed $value): self;
 
     /**
      * Gets the values to bind into the query.

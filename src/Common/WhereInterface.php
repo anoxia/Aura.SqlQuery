@@ -21,20 +21,20 @@ interface WhereInterface
      * ?-placeholders, additional arguments to the method will be bound to
      * those placeholders sequentially.
      *
-     * @param string $cond the WHERE condition
-     * @param array  $bind values to be bound to placeholders
+     * @param string              $cond the WHERE condition
+     * @param array<string,mixed> $bind values to be bound to placeholders
      */
-    public function where($cond, array $bind = []): self;
+    public function where(string $cond, array $bind = []): self;
 
     /**
      * Adds a WHERE condition to the query by OR. If the condition has
      * ?-placeholders, additional arguments to the method will be bound to
      * those placeholders sequentially.
      *
-     * @param string $cond the WHERE condition
-     * @param array  $bind values to be bound to placeholders
+     * @param string              $cond the WHERE condition
+     * @param array<string,mixed> $bind values to be bound to placeholders
      *
      * @see where()
      */
-    public function orWhere($cond, array $bind = []): self;
+    public function orWhere(string $cond, array $bind = []): self;
 }

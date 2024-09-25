@@ -9,15 +9,16 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common;
 
-use Aura\SqlQuery\AbstractQuery;
-use Aura\SqlQuery\Exception;
+use Aura\SqlQuery\AuraSqlQueryException;
+use Aura\SqlQuery\Common\Basic\Query;
+use Aura\SqlQuery\SqlQueryException;
 
 /**
  * An object for SELECT queries.
  *
  * @package Aura.SqlQuery
  */
-class Select extends AbstractQuery implements SelectInterface
+class Select extends Query implements SelectInterface
 {
     use WhereTrait;
     use LimitOffsetTrait {
@@ -258,7 +259,7 @@ class Select extends AbstractQuery implements SelectInterface
 
         if (isset($this->table_refs[$name])) {
             $used = $this->table_refs[$name];
-            throw new Exception("Cannot reference '{$type} {$spec}' after '{$used}'");
+            throw new AuraSqlQueryException("Cannot reference '{$type} {$spec}' after '{$used}'");
         }
 
         $this->table_refs[$name] = "{$type} {$spec}";

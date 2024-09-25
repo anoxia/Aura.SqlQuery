@@ -54,10 +54,10 @@ interface QuoterInterface
      *
      * Looks for a trailing ' AS alias' and quotes the alias as well.
      *
+     * return the string with names quoted in it
+     *
      * @param string $text the string in which to quote fully-qualified
      *                     identifier names to quote
-     *
-     * @return string|array the string with names quoted in it
      */
     public function quoteNamesIn(string $text): string|array;
 }

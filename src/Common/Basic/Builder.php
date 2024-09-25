@@ -7,25 +7,23 @@ declare(strict_types=1);
  * @license http://opensource.org/licenses/mit-license.php MIT
  */
 
-namespace Aura\SqlQuery;
+namespace Aura\SqlQuery\Common\Basic;
 
 /**
  * Base builder for all query objects.
  *
  * @package Aura.SqlQuery
  */
-abstract class AbstractBuilder
+abstract class Builder
 {
     /**
      * Builds the flags as a space-separated string.
      *
-     * @param array $flags the flags to build
-     *
-     * @return string
+     * @param array<string,mixed> $flags the flags to build
      */
-    public function buildFlags(array $flags)
+    public function buildFlags(array $flags): string
     {
-        if (empty($flags)) {
+        if ([] === $flags) {
             return ''; // not applicable
         }
 
@@ -35,11 +33,9 @@ abstract class AbstractBuilder
     /**
      * Builds the `WHERE` clause of the statement.
      *
-     * @param array $where the WHERE elements
-     *
-     * @return string
+     * @param array<string|array<string,mixed>> $where the WHERE elements
      */
-    public function buildWhere(array $where)
+    public function buildWhere(array $where): string
     {
         if (empty($where)) {
             return ''; // not applicable
@@ -51,11 +47,9 @@ abstract class AbstractBuilder
     /**
      * Builds the `ORDER BY ...` clause of the statement.
      *
-     * @param array $order_by the ORDER BY elements
-     *
-     * @return string
+     * @param string[] $order_by the ORDER BY elements
      */
-    public function buildOrderBy(array $order_by)
+    public function buildOrderBy(array $order_by): string
     {
         if (empty($order_by)) {
             return ''; // not applicable
@@ -68,10 +62,8 @@ abstract class AbstractBuilder
      * Builds the `LIMIT` clause of the statement.
      *
      * @param int $limit the LIMIT element
-     *
-     * @return string
      */
-    public function buildLimit($limit)
+    public function buildLimit(int $limit): string
     {
         if (empty($limit)) {
             return '';
@@ -84,10 +76,8 @@ abstract class AbstractBuilder
      *
      * @param int $limit  the LIMIT element
      * @param int $offset the OFFSET element
-     *
-     * @return string
      */
-    public function buildLimitOffset($limit, $offset)
+    public function buildLimitOffset(int $limit, int $offset): string
     {
         $clause = '';
 
@@ -109,11 +99,9 @@ abstract class AbstractBuilder
     /**
      * Returns an array as an indented comma-separated values string.
      *
-     * @param array $list the values to convert
-     *
-     * @return string
+     * @param string[] $list the values to convert
      */
-    public function indentCsv(array $list)
+    public function indentCsv(array $list): string
     {
         return \PHP_EOL . '    '
              . \implode(',' . \PHP_EOL . '    ', $list);
@@ -122,11 +110,9 @@ abstract class AbstractBuilder
     /**
      * Returns an array as an indented string.
      *
-     * @param array $list the values to convert
-     *
-     * @return string
+     * @param string[] $list the values to convert
      */
-    public function indent(array $list)
+    public function indent(array $list): string
     {
         return \PHP_EOL . '    '
              . \implode(\PHP_EOL . '    ', $list);
