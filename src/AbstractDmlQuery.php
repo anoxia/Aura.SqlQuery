@@ -20,16 +20,14 @@ abstract class AbstractDmlQuery extends AbstractQuery
      * Column values for INSERT or UPDATE queries; the key is the column name and the
      * value is the column value.
      *
-     * @param array
+     * @var array<string,mixed>
      */
     protected $col_values;
 
     /**
      * Does the query have any columns in it?
-     *
-     * @return bool
      */
-    public function hasCols()
+    public function hasCols(): bool
     {
         return ! empty($this->col_values);
     }
@@ -40,10 +38,8 @@ abstract class AbstractDmlQuery extends AbstractQuery
      *
      * @param string $col   the column name
      * @param array  $value Value of the column
-     *
-     * @return $this
      */
-    protected function addCol($col, ...$value)
+    protected function addCol(string $col, ...$value): self
     {
         $key = $this->quoter->quoteName($col);
         $this->col_values[$key] = ":{$col}";
@@ -58,13 +54,11 @@ abstract class AbstractDmlQuery extends AbstractQuery
      * pair, the key is treated as the column name and the value is bound to
      * that column.
      *
-     * @param array $cols a list of column names, optionally as key-value
-     *                    pairs where the key is a column name and the value is a bind value for
-     *                    that column
-     *
-     * @return $this
+     * @param array<string,mixed> $cols a list of column names, optionally as key-value
+     *                                  pairs where the key is a column name and the value is a bind value for
+     *                                  that column
      */
-    protected function addCols(array $cols)
+    protected function addCols(array $cols): self
     {
         foreach ($cols as $key => $val) {
             if (\is_int($key)) {
@@ -85,10 +79,8 @@ abstract class AbstractDmlQuery extends AbstractQuery
      *
      * @param string $col   the column name
      * @param string $value the column value expression
-     *
-     * @return $this
      */
-    protected function setCol($col, $value)
+    protected function setCol(string $col, string $value): self
     {
         if (null === $value) {
             $value = 'NULL';

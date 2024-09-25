@@ -18,34 +18,26 @@ class Quoter implements QuoterInterface
 {
     /**
      * The prefix to use when quoting identifier names.
-     *
-     * @var string
      */
-    protected $quote_name_prefix = '"';
+    protected string $quote_name_prefix = '"';
 
     /**
      * The suffix to use when quoting identifier names.
-     *
-     * @var string
      */
-    protected $quote_name_suffix = '"';
+    protected string $quote_name_suffix = '"';
 
     /**
      * Returns the prefix to use when quoting identifier names.
-     *
-     * @return string
      */
-    public function getQuoteNamePrefix()
+    public function getQuoteNamePrefix(): string
     {
         return $this->quote_name_prefix;
     }
 
     /**
      * Returns the suffix to use when quoting identifier names.
-     *
-     * @return string
      */
-    public function getQuoteNameSuffix()
+    public function getQuoteNameSuffix(): string
     {
         return $this->quote_name_suffix;
     }
@@ -63,14 +55,14 @@ class Quoter implements QuoterInterface
      * If the name contains a dot, this method will separately quote the
      * parts before and after the dot.
      *
-     * @param string $spec the identifier name to quote
+     * return the quoted identifier name
      *
-     * @return string the quoted identifier name
+     * @param string $spec the identifier name to quote
      *
      * @see replaceName()
      * @see quoteNameWithSeparator()
      */
-    public function quoteName($spec)
+    public function quoteName(string $spec): string
     {
         $spec = \trim($spec);
         $seps = [' AS ', ' ', '.'];
@@ -92,7 +84,7 @@ class Quoter implements QuoterInterface
      *
      * @return string the quoted identifier name
      */
-    protected function quoteNameWithSeparator($spec, $sep, $pos)
+    protected function quoteNameWithSeparator(string $spec, string $sep, int $pos): string
     {
         $len = \mb_strlen($sep);
         $part1 = $this->quoteName(\mb_substr($spec, 0, $pos));
@@ -116,7 +108,7 @@ class Quoter implements QuoterInterface
      *
      * @see replaceNamesIn()
      */
-    public function quoteNamesIn($text)
+    public function quoteNamesIn(string $text): string|array
     {
         $list = $this->getListForQuoteNamesIn($text);
         $last = \count($list) - 1;
@@ -137,10 +129,8 @@ class Quoter implements QuoterInterface
      * Returns a list of candidate elements for quoting.
      *
      * @param string $text the text to split into quoting candidates
-     *
-     * @return array
      */
-    protected function getListForQuoteNamesIn($text)
+    protected function getListForQuoteNamesIn(string $text): array|bool
     {
         // look for ', ", \', or \" in the string.
         // match closing quotes against the same number of opening quotes.
@@ -162,7 +152,7 @@ class Quoter implements QuoterInterface
      *
      * @return string the quoted name
      */
-    protected function quoteNamesInLoop($val, $is_last)
+    protected function quoteNamesInLoop(string $val, bool $is_last): string|array
     {
         if ($is_last) {
             return $this->replaceNamesAndAliasIn($val);
@@ -177,7 +167,7 @@ class Quoter implements QuoterInterface
      *
      * @return string the quoted name
      */
-    protected function replaceNamesAndAliasIn($val)
+    protected function replaceNamesAndAliasIn(string $val): string|array
     {
         $quoted = $this->replaceNamesIn($val);
         $pos = \mb_strripos($quoted, ' AS ');
@@ -192,16 +182,16 @@ class Quoter implements QuoterInterface
      * Quotes an identifier name (table, index, etc); ignores empty values and
      * values of '*'.
      *
-     * @param string $name the identifier name to quote
+     * return the quoted identifier name
      *
-     * @return string the quoted identifier name
+     * @param string $name the identifier name to quote
      *
      * @see quoteName()
      */
-    protected function replaceName($name)
+    protected function replaceName(string $name): string
     {
         $name = \trim($name);
-        if ('*' == $name) {
+        if ('*' === $name) {
             return $name;
         }
 
@@ -213,14 +203,14 @@ class Quoter implements QuoterInterface
     /**
      * Quotes all fully-qualified identifier names ("table.col") in a string.
      *
+     * return the string with names quoted in it
+     *
      * @param string $text the string in which to quote fully-qualified
      *                     identifier names to quote
      *
-     * @return string|array the string with names quoted in it
-     *
      * @see quoteNamesIn()
      */
-    protected function replaceNamesIn($text)
+    protected function replaceNamesIn(string $text): string|array
     {
         $is_string_literal = \str_contains($text, "'")
                         || \str_contains($text, '"');
@@ -244,5 +234,4 @@ class Quoter implements QuoterInterface
 
         return \preg_replace($find, $repl, $text);
     }
-
 }

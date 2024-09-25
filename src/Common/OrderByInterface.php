@@ -20,8 +20,6 @@ interface OrderByInterface
      * Adds a column order to the query.
      *
      * @param array $spec the columns and direction to order by
-     *
-     * @return $this
      */
-    public function orderBy(array $spec);
+    public function orderBy(array $spec): self;
 }

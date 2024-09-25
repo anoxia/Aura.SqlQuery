@@ -10,6 +10,11 @@ class QueryFactoryTest extends TestCase
 {
     /**
      * @dataProvider provider
+     *
+     * @param mixed $db_type
+     * @param mixed $common
+     * @param mixed $query_type
+     * @param mixed $expect
      */
     public function test($db_type, $common, $query_type, $expect): void
     {
@@ -19,7 +24,10 @@ class QueryFactoryTest extends TestCase
         $this->assertInstanceOf($expect, $actual);
     }
 
-    public function provider()
+    /**
+     * @return array<int,array<int,mixed>>
+     */
+    public function provider(): array
     {
         return [
             // db-specific

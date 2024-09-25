@@ -8,6 +8,8 @@ use PHPUnit\Framework\TestCase;
 
 class QuoterTest extends TestCase
 {
+    protected Quoter $quoter;
+
     public function setUp(): void
     {
         $this->quoter = new Quoter;

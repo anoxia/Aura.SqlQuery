@@ -18,17 +18,13 @@ interface QuoterInterface
 {
     /**
      * Returns the prefix to use when quoting identifier names.
-     *
-     * @return string
      */
-    public function getQuoteNamePrefix();
+    public function getQuoteNamePrefix(): string;
 
     /**
      * Returns the suffix to use when quoting identifier names.
-     *
-     * @return string
      */
-    public function getQuoteNameSuffix();
+    public function getQuoteNameSuffix(): string;
 
     /**
      * Quotes a single identifier name (table, table alias, table column,
@@ -43,11 +39,11 @@ interface QuoterInterface
      * If the name contains a dot, this method will separately quote the
      * parts before and after the dot.
      *
-     * @param string $spec the identifier name to quote
+     * return the quoted identifier name
      *
-     * @return string the quoted identifier name
+     * @param string $spec the identifier name to quote
      */
-    public function quoteName($spec);
+    public function quoteName(string $spec): string;
 
     /**
      * Quotes all fully-qualified identifier names ("table.col") in a string,
@@ -63,5 +59,5 @@ interface QuoterInterface
      *
      * @return string|array the string with names quoted in it
      */
-    public function quoteNamesIn($text);
+    public function quoteNamesIn(string $text): string|array;
 }

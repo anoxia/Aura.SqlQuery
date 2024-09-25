@@ -21,10 +21,8 @@ trait WhereTrait
      *
      * @param string $cond the WHERE condition
      * @param array  $bind Values to be bound to placeholders
-     *
-     * @return $this
      */
-    public function where($cond, array $bind = [])
+    public function where(string $cond, array $bind = []): self
     {
         $this->addClauseCondWithBind('where', 'AND', $cond, $bind);
         return $this;
@@ -38,11 +36,9 @@ trait WhereTrait
      * @param string $cond the WHERE condition
      * @param array  $bind Values to be bound to placeholders
      *
-     * @return $this
-     *
      * @see where()
      */
-    public function orWhere($cond, array $bind = [])
+    public function orWhere(string $cond, array $bind = []): self
     {
         $this->addClauseCondWithBind('where', 'OR', $cond, $bind);
         return $this;

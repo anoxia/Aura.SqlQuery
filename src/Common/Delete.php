@@ -45,7 +45,7 @@ class Delete extends AbstractDmlQuery implements DeleteInterface
      *
      * @return string
      */
-    protected function build()
+    protected function build(): string
     {
         return 'DELETE'
             . $this->builder->buildFlags($this->flags)

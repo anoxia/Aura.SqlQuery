@@ -14,66 +14,47 @@ namespace Aura\SqlQuery;
  *
  * @package Aura.SqlQuery
  */
-interface QueryInterface
+interface QueryInterface extends \Stringable
 {
     /**
-     * Builds this query object into a string.
-     *
-     * @return string
-     */
-    public function __toString();
-
-    /**
      * Returns this query object as an SQL statement string.
-     *
-     * @return string
      */
-    public function getStatement();
+    public function getStatement(): string;
 
     /**
      * Returns the prefix to use when quoting identifier names.
-     *
-     * @return string
      */
-    public function getQuoteNamePrefix();
+    public function getQuoteNamePrefix(): string;
 
     /**
      * Returns the suffix to use when quoting identifier names.
-     *
-     * @return string
      */
-    public function getQuoteNameSuffix();
+    public function getQuoteNameSuffix(): string;
 
     /**
      * Adds values to bind into the query; merges with existing values.
      *
      * @param array $bind_values values to bind to the query
-     *
-     * @return $this
      */
-    public function bindValues(array $bind_values);
+    public function bindValues(array $bind_values): self;
 
     /**
      * Binds a single value to the query.
      *
      * @param string $name  the placeholder name or number
      * @param mixed  $value the value to bind to the placeholder
-     *
-     * @return $this
      */
-    public function bindValue($name, $value);
+    public function bindValue($name, $value): self;
 
     /**
      * Gets the values to bind into the query.
      *
-     * @return array
+     * @return array<string,mixed>
      */
-    public function getBindValues();
+    public function getBindValues(): array;
 
     /**
      * Reset all query flags.
-     *
-     * @return $this
      */
-    public function resetFlags();
+    public function resetFlags(): self;
 }

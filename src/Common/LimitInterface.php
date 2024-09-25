@@ -20,15 +20,11 @@ interface LimitInterface
      * Sets a limit count on the query.
      *
      * @param int $limit the number of rows to select
-     *
-     * @return $this
      */
-    public function limit($limit);
+    public function limit(int $limit): self;
 
     /**
      * Returns the LIMIT value.
-     *
-     * @return int
      */
-    public function getLimit();
+    public function getLimit(): int;
 }

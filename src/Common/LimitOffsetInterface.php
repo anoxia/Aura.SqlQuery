@@ -20,15 +20,11 @@ interface LimitOffsetInterface extends LimitInterface
      * Sets a limit offset on the query.
      *
      * @param int $offset start returning after this many rows
-     *
-     * @return $this
      */
-    public function offset($offset);
+    public function offset(int $offset): self;
 
     /**
      * Returns the OFFSET value.
-     *
-     * @return int
      */
-    public function getOffset();
+    public function getOffset(): int;
 }

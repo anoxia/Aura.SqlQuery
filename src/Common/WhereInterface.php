@@ -23,10 +23,8 @@ interface WhereInterface
      *
      * @param string $cond the WHERE condition
      * @param array  $bind values to be bound to placeholders
-     *
-     * @return $this
      */
-    public function where($cond, array $bind = []);
+    public function where($cond, array $bind = []): self;
 
     /**
      * Adds a WHERE condition to the query by OR. If the condition has
@@ -36,9 +34,7 @@ interface WhereInterface
      * @param string $cond the WHERE condition
      * @param array  $bind values to be bound to placeholders
      *
-     * @return $this
-     *
      * @see where()
      */
-    public function orWhere($cond, array $bind = []);
+    public function orWhere($cond, array $bind = []): self;
 }

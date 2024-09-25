@@ -20,15 +20,11 @@ class Quoter extends Common\Quoter
 {
     /**
      * The prefix to use when quoting identifier names.
-     *
-     * @var string
      */
-    protected $quote_name_prefix = '`';
+    protected string $quote_name_prefix = '`';
 
     /**
      * The suffix to use when quoting identifier names.
-     *
-     * @var string
      */
-    protected $quote_name_suffix = '`';
+    protected string $quote_name_suffix = '`';
 }

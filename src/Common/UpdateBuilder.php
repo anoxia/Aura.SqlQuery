@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common;
 
+use Aura\SqlQuery\AbstractBuilder;
+
 /**
  * Common UPDATE builder.
  *

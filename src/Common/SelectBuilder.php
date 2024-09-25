@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common;
 
+use Aura\SqlQuery\AbstractBuilder;
 use Aura\SqlQuery\Exception;
 
 /**
@@ -16,7 +17,7 @@ use Aura\SqlQuery\Exception;
  *
  * @package Aura.SqlQuery
  */
-class SelectBuilder extends AbstractBuilder
+class SelectBuilder extends AbstractBuilder implements BuilderInterface
 {
     /**
      * Builds the columns portion of the SELECT.
