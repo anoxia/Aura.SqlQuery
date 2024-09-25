@@ -1,32 +1,27 @@
 <?php
+
+declare(strict_types=1);
 /**
- *
  * This file is part of Aura for PHP.
  *
  * @license http://opensource.org/licenses/mit-license.php MIT
- *
  */
+
 namespace Aura\SqlQuery\Common;
 
-use Aura\SqlQuery\Exception;
-
 /**
- *
  * Base builder for all query objects.
  *
  * @package Aura.SqlQuery
- *
  */
 abstract class AbstractBuilder
 {
     /**
-     *
      * Builds the flags as a space-separated string.
      *
-     * @param array $flags The flags to build.
+     * @param array $flags the flags to build
      *
      * @return string
-     *
      */
     public function buildFlags(array $flags)
     {
@@ -34,17 +29,15 @@ abstract class AbstractBuilder
             return ''; // not applicable
         }
 
-        return ' ' . implode(' ', array_keys($flags));
+        return ' ' . \implode(' ', \array_keys($flags));
     }
 
     /**
-     *
      * Builds the `WHERE` clause of the statement.
      *
-     * @param array $where The WHERE elements.
+     * @param array $where the WHERE elements
      *
      * @return string
-     *
      */
     public function buildWhere(array $where)
     {
@@ -52,17 +45,15 @@ abstract class AbstractBuilder
             return ''; // not applicable
         }
 
-        return PHP_EOL . 'WHERE' . $this->indent($where);
+        return \PHP_EOL . 'WHERE' . $this->indent($where);
     }
 
     /**
-     *
      * Builds the `ORDER BY ...` clause of the statement.
      *
-     * @param array $order_by The ORDER BY elements.
+     * @param array $order_by the ORDER BY elements
      *
      * @return string
-     *
      */
     public function buildOrderBy(array $order_by)
     {
@@ -70,83 +61,74 @@ abstract class AbstractBuilder
             return ''; // not applicable
         }
 
-        return PHP_EOL . 'ORDER BY' . $this->indentCsv($order_by);
+        return \PHP_EOL . 'ORDER BY' . $this->indentCsv($order_by);
     }
 
     /**
-     *
      * Builds the `LIMIT` clause of the statement.
      *
-     * @param int $limit The LIMIT element.
+     * @param int $limit the LIMIT element
      *
      * @return string
-     *
      */
     public function buildLimit($limit)
     {
         if (empty($limit)) {
             return '';
         }
-        return PHP_EOL . "LIMIT {$limit}";
+        return \PHP_EOL . "LIMIT {$limit}";
     }
 
     /**
-     *
      * Builds the `LIMIT ... OFFSET` clause of the statement.
      *
-     * @param int $limit The LIMIT element.
-     *
-     * @param int $offset The OFFSET element.
+     * @param int $limit  the LIMIT element
+     * @param int $offset the OFFSET element
      *
      * @return string
-     *
      */
     public function buildLimitOffset($limit, $offset)
     {
         $clause = '';
 
-        if (!empty($limit)) {
+        if (! empty($limit)) {
             $clause .= "LIMIT {$limit}";
         }
 
-        if (!empty($offset)) {
+        if (! empty($offset)) {
             $clause .= " OFFSET {$offset}";
         }
 
-        if (!empty($clause)) {
-            $clause = PHP_EOL . trim($clause);
+        if (! empty($clause)) {
+            $clause = \PHP_EOL . \trim($clause);
         }
 
         return $clause;
     }
 
     /**
-     *
      * Returns an array as an indented comma-separated values string.
      *
-     * @param array $list The values to convert.
+     * @param array $list the values to convert
      *
      * @return string
-     *
      */
     public function indentCsv(array $list)
     {
-        return PHP_EOL . '    '
-             . implode(',' . PHP_EOL . '    ', $list);
+        return \PHP_EOL . '    '
+             . \implode(',' . \PHP_EOL . '    ', $list);
     }
 
     /**
-     *
      * Returns an array as an indented string.
      *
-     * @param array $list The values to convert.
+     * @param array $list the values to convert
      *
      * @return string
-     *
      */
     public function indent(array $list)
     {
-        return PHP_EOL . '    '
-             . implode(PHP_EOL . '    ', $list);
+        return \PHP_EOL . '    '
+             . \implode(\PHP_EOL . '    ', $list);
     }
 }

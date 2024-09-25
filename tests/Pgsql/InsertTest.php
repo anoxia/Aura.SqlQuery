@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Aura\SqlQuery\Pgsql;
 
 use Aura\SqlQuery\Common;
@@ -7,17 +10,19 @@ class InsertTest extends Common\InsertTest
 {
     protected $db_type = 'pgsql';
 
-    public function testReturning()
+    public function testReturning(): void
     {
         $this->query->into('t1')
-                    ->cols(array('c1', 'c2', 'c3'))
-                    ->set('c4', 'NOW()')
-                    ->set('c5', null)
-                    ->returning(array('c1', 'c2'))
-                    ->returning(array('c3'));
+            ->cols(['c1', 'c2', 'c3'])
+            ->set('c4', 'NOW()')
+            ->set('c5', null)
+            ->returning(['c1', 'c2'])
+            ->returning(['c3'])
+        ;
 
         $actual = $this->query->__toString();
-        $expect = "
+        $expect = <<<'EOD'
+
             INSERT INTO <<t1>> (
                 <<c1>>,
                 <<c2>>,
@@ -35,12 +40,13 @@ class InsertTest extends Common\InsertTest
                 c1,
                 c2,
                 c3
-        ";
+
+EOD;
 
         $this->assertSameSql($expect, $actual);
     }
 
-    public function testGetLastInsertIdName_default()
+    public function testGetLastInsertIdName_default(): void
     {
         $this->query->into('table');
         $actual = $this->query->getLastInsertIdName('col');

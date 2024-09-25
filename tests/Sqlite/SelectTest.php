@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Aura\SqlQuery\Sqlite;
 
 use Aura\SqlQuery\Common;

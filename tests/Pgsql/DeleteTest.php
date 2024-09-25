@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Aura\SqlQuery\Pgsql;
 
 use Aura\SqlQuery\Common;
@@ -7,16 +10,18 @@ class DeleteTest extends Common\DeleteTest
 {
     protected $db_type = 'pgsql';
 
-    public function testReturning()
+    public function testReturning(): void
     {
         $this->query->from('t1')
-                    ->where('foo = :foo', ['foo' => 'bar'])
-                    ->where('baz = :baz', ['baz' => 'dib'])
-                    ->orWhere('zim = gir')
-                    ->returning(array('foo', 'baz', 'zim'));
+            ->where('foo = :foo', ['foo' => 'bar'])
+            ->where('baz = :baz', ['baz' => 'dib'])
+            ->orWhere('zim = gir')
+            ->returning(['foo', 'baz', 'zim'])
+        ;
 
         $actual = $this->query->__toString();
-        $expect = "
+        $expect = <<<'EOD'
+
             DELETE FROM <<t1>>
             WHERE
                 foo = :foo
@@ -26,14 +31,15 @@ class DeleteTest extends Common\DeleteTest
                 foo,
                 baz,
                 zim
-        ";
+
+EOD;
         $this->assertSameSql($expect, $actual);
 
         $actual = $this->query->getBindValues();
-        $expect = array(
+        $expect = [
             'foo' => 'bar',
             'baz' => 'dib',
-        );
+        ];
         $this->assertSame($expect, $actual);
     }
 }

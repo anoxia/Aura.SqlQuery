@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Aura\SqlQuery;
 
 use PHPUnit\Framework\TestCase;
@@ -13,7 +16,7 @@ abstract class AbstractQueryTest extends TestCase
 
     protected $query;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->query_factory = new QueryFactory($this->db_type);
@@ -23,27 +26,27 @@ abstract class AbstractQueryTest extends TestCase
     protected function newQuery()
     {
         $method = 'new' . $this->query_type;
-        return $this->query_factory->$method();
+        return $this->query_factory->{$method}();
     }
 
-    protected function assertSameSql($expect, $actual)
+    protected function assertSameSql($expect, $actual): void
     {
         // remove leading and trailing whitespace per block and line
-        $expect = trim($expect);
-        $expect = preg_replace('/^[ \t]*/m', '', $expect);
-        $expect = preg_replace('/[ \t]*$/m', '', $expect);
+        $expect = \trim($expect);
+        $expect = \preg_replace('/^[ \t]*/m', '', $expect);
+        $expect = \preg_replace('/[ \t]*$/m', '', $expect);
 
         // convert "<<" and ">>" to the correct identifier quotes
         $expect = $this->requoteIdentifiers($expect);
 
         // remove leading and trailing whitespace per block and line
-        $actual = trim($actual);
-        $actual = preg_replace('/^[ \t]*/m', '', $actual);
-        $actual = preg_replace('/[ \t]*$/m', '', $actual);
+        $actual = \trim($actual);
+        $actual = \preg_replace('/^[ \t]*/m', '', $actual);
+        $actual = \preg_replace('/[ \t]*$/m', '', $actual);
 
         // normalize line endings to be sure tests will pass on windows and mac
-        $expect = preg_replace('/\r\n|\n|\r/', PHP_EOL, $expect);
-        $actual = preg_replace('/\r\n|\n|\r/', PHP_EOL, $actual);
+        $expect = \preg_replace('/\r\n|\n|\r/', \PHP_EOL, $expect);
+        $actual = \preg_replace('/\r\n|\n|\r/', \PHP_EOL, $actual);
 
         // are they the same now?
         $this->assertSame($expect, $actual);
@@ -51,28 +54,27 @@ abstract class AbstractQueryTest extends TestCase
 
     protected function requoteIdentifiers($string)
     {
-        $string = str_replace('<<', $this->query->getQuoteNamePrefix(), $string);
-        $string = str_replace('>>', $this->query->getQuoteNameSuffix(), $string);
-        return $string;
+        $string = \str_replace('<<', $this->query->getQuoteNamePrefix(), $string);
+        return \str_replace('>>', $this->query->getQuoteNameSuffix(), $string);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         parent::tearDown();
     }
 
-    public function testBindValues()
+    public function testBindValues(): void
     {
         $actual = $this->query->getBindValues();
-        $this->assertSame(array(), $actual);
+        $this->assertSame([], $actual);
 
-        $expect = array('foo' => 'bar', 'baz' => 'dib');
+        $expect = ['foo' => 'bar', 'baz' => 'dib'];
         $this->query->bindValues($expect);
         $actual = $this->query->getBindValues();
         $this->assertSame($expect, $actual);
 
-        $this->query->bindValues(array('zim' => 'gir'));
-        $expect = array('foo' => 'bar', 'baz' => 'dib', 'zim' => 'gir');
+        $this->query->bindValues(['zim' => 'gir']);
+        $expect = ['foo' => 'bar', 'baz' => 'dib', 'zim' => 'gir'];
         $actual = $this->query->getBindValues();
         $this->assertSame($expect, $actual);
 

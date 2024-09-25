@@ -1,11 +1,12 @@
 <?php
+
+declare(strict_types=1);
 /**
- *
  * This file is part of Aura for PHP.
  *
  * @license http://opensource.org/licenses/mit-license.php MIT
- *
  */
+
 namespace Aura\SqlQuery;
 
 use Aura\SqlQuery\Common\SelectInterface;
@@ -13,76 +14,59 @@ use Aura\SqlQuery\Common\QuoterInterface;
 use Closure;
 
 /**
- *
  * Abstract query object.
  *
  * @package Aura.SqlQuery
- *
  */
 abstract class AbstractQuery
 {
     /**
-     *
      * Data to be bound to the query.
      *
      * @var array
-     *
      */
-    protected $bind_values = array();
+    protected $bind_values = [];
 
     /**
-     *
      * The list of WHERE conditions.
      *
      * @var array
-     *
      */
-    protected $where = array();
+    protected $where = [];
 
     /**
-     *
      * ORDER BY these columns.
      *
      * @var array
-     *
      */
-    protected $order_by = array();
+    protected $order_by = [];
 
     /**
-     *
      * The list of flags.
      *
      * @var array
-     *
      */
-    protected $flags = array();
+    protected $flags = [];
 
     /**
-     *
      * A helper for quoting identifier names.
      *
      * @var Quoter
-     *
      */
     protected $quoter;
 
     /**
-     *
      * A builder for the query.
      *
      * @var AbstractBuilder
-     *
      */
     protected $builder;
 
     /**
-     *
      * Constructor.
      *
-     * @param Quoter $quoter A helper for quoting identifier names.
-     *
-     * @param AbstractBuilder $builder A builder for the query.
-     *
+     * @param Quoter          $quoter  a helper for quoting identifier names
+     * @param AbstractBuilder $builder a builder for the query
      */
     public function __construct(QuoterInterface $quoter, $builder)
     {
@@ -91,11 +75,9 @@ abstract class AbstractQuery
     }
 
     /**
-     *
      * Returns this query object as an SQL statement string.
      *
      * @return string
-     *
      */
     public function __toString()
     {
@@ -103,11 +85,9 @@ abstract class AbstractQuery
     }
 
     /**
-     *
      * Returns this query object as an SQL statement string.
      *
      * @return string
-     *
      */
     public function getStatement()
     {
@@ -115,20 +95,16 @@ abstract class AbstractQuery
     }
 
     /**
-     *
      * Builds this query object into a string.
      *
      * @return string
-     *
      */
     abstract protected function build();
 
     /**
-     *
      * Returns the prefix to use when quoting identifier names.
      *
      * @return string
-     *
      */
     public function getQuoteNamePrefix()
     {
@@ -136,11 +112,9 @@ abstract class AbstractQuery
     }
 
     /**
-     *
      * Returns the suffix to use when quoting identifier names.
      *
      * @return string
-     *
      */
     public function getQuoteNameSuffix()
     {
@@ -148,13 +122,11 @@ abstract class AbstractQuery
     }
 
     /**
-     *
      * Binds multiple values to placeholders; merges with existing values.
      *
-     * @param array $bind_values Values to bind to placeholders.
+     * @param array $bind_values values to bind to placeholders
      *
      * @return $this
-     *
      */
     public function bindValues(array $bind_values)
     {
@@ -167,15 +139,12 @@ abstract class AbstractQuery
     }
 
     /**
-     *
      * Binds a single value to the query.
      *
-     * @param string $name The placeholder name or number.
-     *
-     * @param mixed $value The value to bind to the placeholder.
+     * @param string $name  the placeholder name or number
+     * @param mixed  $value the value to bind to the placeholder
      *
      * @return $this
-     *
      */
     public function bindValue($name, $value)
     {
@@ -184,11 +153,9 @@ abstract class AbstractQuery
     }
 
     /**
-     *
      * Gets the values to bind to placeholders.
      *
      * @return array
-     *
      */
     public function getBindValues()
     {
@@ -196,28 +163,21 @@ abstract class AbstractQuery
     }
 
     /**
-     *
      * Reset all values bound to named placeholders.
      *
      * @return $this
-     *
      */
     public function resetBindValues()
     {
-        $this->bind_values = array();
+        $this->bind_values = [];
         return $this;
     }
 
     /**
-     *
      * Sets or unsets specified flag.
      *
-     * @param string $flag Flag to set or unset
-     *
-     * @param bool $enable Flag status - enabled or not (default true)
-     *
-     * @return null
-     *
+     * @param string $flag   Flag to set or unset
+     * @param bool   $enable Flag status - enabled or not (default true)
      */
     protected function setFlag($flag, $enable = true)
     {
@@ -229,13 +189,11 @@ abstract class AbstractQuery
     }
 
     /**
-     *
      * Returns true if the specified flag was enabled by setFlag().
      *
      * @param string $flag Flag to check
      *
      * @return bool
-     *
      */
     protected function hasFlag($flag)
     {
@@ -243,38 +201,29 @@ abstract class AbstractQuery
     }
 
     /**
-     *
      * Reset all query flags.
      *
      * @return $this
-     *
      */
     public function resetFlags()
     {
-        $this->flags = array();
+        $this->flags = [];
         return $this;
     }
 
     /**
-     *
      * Adds conditions and binds values to a clause.
      *
-     * @param string $clause The clause to work with, typically 'where' or
-     * 'having'.
-     *
-     * @param string $andor Add the condition using this operator, typically
-     * 'AND' or 'OR'.
-     *
-     * @param string $cond The WHERE condition.
-     *
-     * @param array $bind arguments to bind to placeholders
-     *
-     * @return null
-     *
+     * @param string $clause the clause to work with, typically 'where' or
+     *                       'having'
+     * @param string $andor  add the condition using this operator, typically
+     *                       'AND' or 'OR'
+     * @param string $cond   the WHERE condition
+     * @param array  $bind   arguments to bind to placeholders
      */
     protected function addClauseCondWithBind($clause, $andor, $cond, $bind)
     {
-        if ($cond instanceof Closure) {
+        if ($cond instanceof \Closure) {
             $this->addClauseCondClosure($clause, $andor, $cond);
             $this->bindValues($bind);
             return;
@@ -283,44 +232,38 @@ abstract class AbstractQuery
         $cond = $this->quoter->quoteNamesIn($cond);
         $cond = $this->rebuildCondAndBindValues($cond, $bind);
 
-        $clause =& $this->$clause;
+        $clause = &$this->{$clause};
         if ($clause) {
-            $clause[] = "$andor $cond";
+            $clause[] = "{$andor} {$cond}";
         } else {
             $clause[] = $cond;
         }
     }
 
     /**
-     *
      * Adds to a clause through a closure, enclosing within parentheses.
      *
-     * @param string $clause The clause to work with, typically 'where' or
-     * 'having'.
-     *
-     * @param string $andor Add the condition using this operator, typically
-     * 'AND' or 'OR'.
-     *
-     * @param callable $closure The closure that adds to the clause.
-     *
-     * @return null
-     *
+     * @param string   $clause  the clause to work with, typically 'where' or
+     *                          'having'
+     * @param string   $andor   add the condition using this operator, typically
+     *                          'AND' or 'OR'
+     * @param callable $closure the closure that adds to the clause
      */
     protected function addClauseCondClosure($clause, $andor, $closure)
     {
         // retain the prior set of conditions, and temporarily reset the clause
         // for the closure to work with (otherwise there will be an extraneous
         // opening AND/OR keyword)
-        $set = $this->$clause;
-        $this->$clause = [];
+        $set = $this->{$clause};
+        $this->{$clause} = [];
 
         // invoke the closure, which will re-populate the $this->$clause
         $closure($this);
 
         // are there new clause elements?
-        if (! $this->$clause) {
+        if (! $this->{$clause}) {
             // no: restore the old ones, and done
-            $this->$clause = $set;
+            $this->{$clause} = $set;
             return;
         }
 
@@ -329,32 +272,29 @@ abstract class AbstractQuery
         if ($set) {
             $set[] = "{$andor} (";
         } else {
-            $set[] = "(";
+            $set[] = '(';
         }
 
         // append the new conditions to the set, with indenting
-        foreach ($this->$clause as $cond) {
+        foreach ($this->{$clause} as $cond) {
             $set[] = "    {$cond}";
         }
-        $set[] = ")";
+        $set[] = ')';
 
         // ... then put the full set of conditions back into $this->$clause
-        $this->$clause = $set;
+        $this->{$clause} = $set;
     }
 
     /**
-     *
      * Rebuilds a condition string, replacing sequential placeholders with
      * named placeholders, and binding the sequential values to the named
      * placeholders.
      *
-     * @param string $cond The condition with sequential placeholders.
+     * @param string $cond        the condition with sequential placeholders
+     * @param array  $bind_values the values to bind to the sequential
+     *                            placeholders under their named versions
      *
-     * @param array $bind_values The values to bind to the sequential
-     * placeholders under their named versions.
-     *
-     * @return string The rebuilt condition string.
-     *
+     * @return string the rebuilt condition string
      */
     protected function rebuildCondAndBindValues($cond, array $bind_values)
     {
@@ -370,24 +310,21 @@ abstract class AbstractQuery
 
         foreach ($selects as $key => $select) {
             $selects[$key] = $select->getStatement();
-            $this->bind_values = array_merge(
+            $this->bind_values = \array_merge(
                 $this->bind_values,
-                $select->getBindValues()
+                $select->getBindValues(),
             );
         }
 
-        $cond = strtr($cond, $selects);
-        return $cond;
+        return \strtr($cond, $selects);
     }
 
     /**
-     *
      * Adds a column order to the query.
      *
-     * @param array $spec The columns and direction to order by.
+     * @param array $spec the columns and direction to order by
      *
      * @return $this
-     *
      */
     protected function addOrderBy(array $spec)
     {

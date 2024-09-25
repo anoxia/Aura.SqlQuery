@@ -1,4 +1,10 @@
-/composer.lock
-/vendor
-.phpunit.result.cache
+.*
+!.gitignore
+!.php-cs-fixer.dist.php
+!.github/
 
+composer
+vendor/
+coverage/
+library/
+*.gz

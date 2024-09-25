@@ -1,32 +1,29 @@
 <?php
+
+declare(strict_types=1);
 /**
- *
  * This file is part of Aura for PHP.
  *
  * @license http://opensource.org/licenses/mit-license.php MIT
- *
  */
+
 namespace Aura\SqlQuery\Sqlite;
 
 use Aura\SqlQuery\Common;
 
 /**
- *
  * An object for Sqlite INSERT queries.
  *
  * @package Aura.SqlQuery
- *
  */
 class Insert extends Common\Insert
 {
     /**
-     *
      * Adds or removes OR ABORT flag.
      *
-     * @param bool $enable Set or unset flag (default true).
+     * @param bool $enable set or unset flag (default true)
      *
      * @return $this
-     *
      */
     public function orAbort($enable = true)
     {
@@ -35,13 +32,11 @@ class Insert extends Common\Insert
     }
 
     /**
-     *
      * Adds or removes OR FAIL flag.
      *
-     * @param bool $enable Set or unset flag (default true).
+     * @param bool $enable set or unset flag (default true)
      *
      * @return $this
-     *
      */
     public function orFail($enable = true)
     {
@@ -50,13 +45,11 @@ class Insert extends Common\Insert
     }
 
     /**
-     *
      * Adds or removes OR IGNORE flag.
      *
-     * @param bool $enable Set or unset flag (default true).
+     * @param bool $enable set or unset flag (default true)
      *
      * @return $this
-     *
      */
     public function orIgnore($enable = true)
     {
@@ -65,13 +58,11 @@ class Insert extends Common\Insert
     }
 
     /**
-     *
      * Adds or removes OR REPLACE flag.
      *
-     * @param bool $enable Set or unset flag (default true).
+     * @param bool $enable set or unset flag (default true)
      *
      * @return $this
-     *
      */
     public function orReplace($enable = true)
     {
@@ -80,13 +71,11 @@ class Insert extends Common\Insert
     }
 
     /**
-     *
      * Adds or removes OR ROLLBACK flag.
      *
-     * @param bool $enable Set or unset flag (default true).
+     * @param bool $enable set or unset flag (default true)
      *
      * @return $this
-     *
      */
     public function orRollback($enable = true)
     {

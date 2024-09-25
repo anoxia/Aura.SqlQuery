@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Aura\SqlQuery;
 
 use PHPUnit\Framework\TestCase;
@@ -8,60 +11,60 @@ class QueryFactoryTest extends TestCase
     /**
      * @dataProvider provider
      */
-    public function test($db_type, $common, $query_type, $expect)
+    public function test($db_type, $common, $query_type, $expect): void
     {
         $query_factory = new QueryFactory($db_type, $common);
         $method = 'new' . $query_type;
-        $actual = $query_factory->$method();
+        $actual = $query_factory->{$method}();
         $this->assertInstanceOf($expect, $actual);
     }
 
     public function provider()
     {
-        return array(
+        return [
             // db-specific
-            array('Common', false, 'Select', 'Aura\SqlQuery\Common\Select'),
-            array('Common', false, 'Insert', 'Aura\SqlQuery\Common\Insert'),
-            array('Common', false, 'Update', 'Aura\SqlQuery\Common\Update'),
-            array('Common', false, 'Delete', 'Aura\SqlQuery\Common\Delete'),
-            array('Mysql',  false, 'Select', 'Aura\SqlQuery\Mysql\Select'),
-            array('Mysql',  false, 'Insert', 'Aura\SqlQuery\Mysql\Insert'),
-            array('Mysql',  false, 'Update', 'Aura\SqlQuery\Mysql\Update'),
-            array('Mysql',  false, 'Delete', 'Aura\SqlQuery\Mysql\Delete'),
-            array('Pgsql',  false, 'Select', 'Aura\SqlQuery\Pgsql\Select'),
-            array('Pgsql',  false, 'Insert', 'Aura\SqlQuery\Pgsql\Insert'),
-            array('Pgsql',  false, 'Update', 'Aura\SqlQuery\Pgsql\Update'),
-            array('Pgsql',  false, 'Delete', 'Aura\SqlQuery\Pgsql\Delete'),
-            array('Sqlite', false, 'Select', 'Aura\SqlQuery\Sqlite\Select'),
-            array('Sqlite', false, 'Insert', 'Aura\SqlQuery\Sqlite\Insert'),
-            array('Sqlite', false, 'Update', 'Aura\SqlQuery\Sqlite\Update'),
-            array('Sqlite', false, 'Delete', 'Aura\SqlQuery\Sqlite\Delete'),
-            array('Sqlsrv', false, 'Select', 'Aura\SqlQuery\Sqlsrv\Select'),
-            array('Sqlsrv', false, 'Insert', 'Aura\SqlQuery\Sqlsrv\Insert'),
-            array('Sqlsrv', false, 'Update', 'Aura\SqlQuery\Sqlsrv\Update'),
-            array('Sqlsrv', false, 'Delete', 'Aura\SqlQuery\Sqlsrv\Delete'),
+            ['Common', false, 'Select', Common\Select::class],
+            ['Common', false, 'Insert', Common\Insert::class],
+            ['Common', false, 'Update', Common\Update::class],
+            ['Common', false, 'Delete', Common\Delete::class],
+            ['Mysql', false, 'Select', Mysql\Select::class],
+            ['Mysql', false, 'Insert', Mysql\Insert::class],
+            ['Mysql', false, 'Update', Mysql\Update::class],
+            ['Mysql', false, 'Delete', Mysql\Delete::class],
+            ['Pgsql', false, 'Select', Pgsql\Select::class],
+            ['Pgsql', false, 'Insert', Pgsql\Insert::class],
+            ['Pgsql', false, 'Update', Pgsql\Update::class],
+            ['Pgsql', false, 'Delete', Pgsql\Delete::class],
+            ['Sqlite', false, 'Select', Sqlite\Select::class],
+            ['Sqlite', false, 'Insert', Sqlite\Insert::class],
+            ['Sqlite', false, 'Update', Sqlite\Update::class],
+            ['Sqlite', false, 'Delete', Sqlite\Delete::class],
+            ['Sqlsrv', false, 'Select', Sqlsrv\Select::class],
+            ['Sqlsrv', false, 'Insert', Sqlsrv\Insert::class],
+            ['Sqlsrv', false, 'Update', Sqlsrv\Update::class],
+            ['Sqlsrv', false, 'Delete', Sqlsrv\Delete::class],
 
             // force common
-            array('Common', QueryFactory::COMMON, 'Select', 'Aura\SqlQuery\Common\Select'),
-            array('Common', QueryFactory::COMMON, 'Insert', 'Aura\SqlQuery\Common\Insert'),
-            array('Common', QueryFactory::COMMON, 'Update', 'Aura\SqlQuery\Common\Update'),
-            array('Common', QueryFactory::COMMON, 'Delete', 'Aura\SqlQuery\Common\Delete'),
-            array('Mysql',  QueryFactory::COMMON, 'Select', 'Aura\SqlQuery\Common\Select'),
-            array('Mysql',  QueryFactory::COMMON, 'Insert', 'Aura\SqlQuery\Common\Insert'),
-            array('Mysql',  QueryFactory::COMMON, 'Update', 'Aura\SqlQuery\Common\Update'),
-            array('Mysql',  QueryFactory::COMMON, 'Delete', 'Aura\SqlQuery\Common\Delete'),
-            array('Pgsql',  QueryFactory::COMMON, 'Select', 'Aura\SqlQuery\Common\Select'),
-            array('Pgsql',  QueryFactory::COMMON, 'Insert', 'Aura\SqlQuery\Common\Insert'),
-            array('Pgsql',  QueryFactory::COMMON, 'Update', 'Aura\SqlQuery\Common\Update'),
-            array('Pgsql',  QueryFactory::COMMON, 'Delete', 'Aura\SqlQuery\Common\Delete'),
-            array('Sqlite', QueryFactory::COMMON, 'Select', 'Aura\SqlQuery\Common\Select'),
-            array('Sqlite', QueryFactory::COMMON, 'Insert', 'Aura\SqlQuery\Common\Insert'),
-            array('Sqlite', QueryFactory::COMMON, 'Update', 'Aura\SqlQuery\Common\Update'),
-            array('Sqlite', QueryFactory::COMMON, 'Delete', 'Aura\SqlQuery\Common\Delete'),
-            array('Sqlsrv', QueryFactory::COMMON, 'Select', 'Aura\SqlQuery\Common\Select'),
-            array('Sqlsrv', QueryFactory::COMMON, 'Insert', 'Aura\SqlQuery\Common\Insert'),
-            array('Sqlsrv', QueryFactory::COMMON, 'Update', 'Aura\SqlQuery\Common\Update'),
-            array('Sqlsrv', QueryFactory::COMMON, 'Delete', 'Aura\SqlQuery\Common\Delete'),
-        );
+            ['Common', QueryFactory::COMMON, 'Select', Common\Select::class],
+            ['Common', QueryFactory::COMMON, 'Insert', Common\Insert::class],
+            ['Common', QueryFactory::COMMON, 'Update', Common\Update::class],
+            ['Common', QueryFactory::COMMON, 'Delete', Common\Delete::class],
+            ['Mysql', QueryFactory::COMMON, 'Select', Common\Select::class],
+            ['Mysql', QueryFactory::COMMON, 'Insert', Common\Insert::class],
+            ['Mysql', QueryFactory::COMMON, 'Update', Common\Update::class],
+            ['Mysql', QueryFactory::COMMON, 'Delete', Common\Delete::class],
+            ['Pgsql', QueryFactory::COMMON, 'Select', Common\Select::class],
+            ['Pgsql', QueryFactory::COMMON, 'Insert', Common\Insert::class],
+            ['Pgsql', QueryFactory::COMMON, 'Update', Common\Update::class],
+            ['Pgsql', QueryFactory::COMMON, 'Delete', Common\Delete::class],
+            ['Sqlite', QueryFactory::COMMON, 'Select', Common\Select::class],
+            ['Sqlite', QueryFactory::COMMON, 'Insert', Common\Insert::class],
+            ['Sqlite', QueryFactory::COMMON, 'Update', Common\Update::class],
+            ['Sqlite', QueryFactory::COMMON, 'Delete', Common\Delete::class],
+            ['Sqlsrv', QueryFactory::COMMON, 'Select', Common\Select::class],
+            ['Sqlsrv', QueryFactory::COMMON, 'Insert', Common\Insert::class],
+            ['Sqlsrv', QueryFactory::COMMON, 'Update', Common\Update::class],
+            ['Sqlsrv', QueryFactory::COMMON, 'Delete', Common\Delete::class],
+        ];
     }
 }

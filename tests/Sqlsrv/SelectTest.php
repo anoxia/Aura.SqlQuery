@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Aura\SqlQuery\Sqlsrv;
 
 use Aura\SqlQuery\Common;
@@ -7,36 +10,42 @@ class SelectTest extends Common\SelectTest
 {
     protected $db_type = 'sqlsrv';
 
-    public function testLimitOffset()
+    public function testLimitOffset(): void
     {
-        $this->query->cols(array('*'));
+        $this->query->cols(['*']);
         $this->query->limit(10);
-        $expect = '
+        $expect = <<<'EOD'
+
             SELECT TOP 10
                 *
-        ';
+
+EOD;
         $actual = $this->query->__toString();
         $this->assertSameSql($expect, $actual);
 
         $this->query->offset(40);
-        $expect = '
+        $expect = <<<'EOD'
+
             SELECT
                 *
             OFFSET 40 ROWS FETCH NEXT 10 ROWS ONLY
-        ';
+
+EOD;
         $actual = $this->query->__toString();
         $this->assertSameSql($expect, $actual);
     }
 
-    public function testPage()
+    public function testPage(): void
     {
-        $this->query->cols(array('*'));
+        $this->query->cols(['*']);
         $this->query->page(5);
-        $expect = '
+        $expect = <<<'EOD'
+
             SELECT
                 *
             OFFSET 40 ROWS FETCH NEXT 10 ROWS ONLY
-        ';
+
+EOD;
         $actual = $this->query->__toString();
         $this->assertSameSql($expect, $actual);
     }
