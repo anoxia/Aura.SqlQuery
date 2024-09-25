@@ -18,11 +18,8 @@ use Aura\SqlQuery\Common\Basic\QuoterInterface;
  *
  * @package Aura.SqlQuery
  */
-class Insert extends Columns implements InsertInterface, \Stringable
+class Insert extends Columns implements InsertInterface
 {
-    use Traits\QuoteNameTrait;
-    use Traits\ToStringTrait;
-
     /**
      * The table to insert into (quoted).
      */

@@ -13,6 +13,7 @@ use Aura\SqlQuery\Common\Basic\ColumnsInterface;
 use Aura\SqlQuery\Common\Basic\LimitOffsetInterface;
 use Aura\SqlQuery\Common\Basic\OrderByInterface;
 use Aura\SqlQuery\Common\Basic\StatementInterface;
+use Aura\SqlQuery\Common\Basic\ValuesInterface;
 use Aura\SqlQuery\Common\Basic\WhereInterface;
 
 /**
@@ -21,6 +22,7 @@ use Aura\SqlQuery\Common\Basic\WhereInterface;
  * @package Aura.SqlQuery
  */
 interface SelectInterface extends
+    ValuesInterface,
     ColumnsInterface,
     WhereInterface,
     OrderByInterface,

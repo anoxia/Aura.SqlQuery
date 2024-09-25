@@ -14,7 +14,7 @@ namespace Aura\SqlQuery\Common\Basic;
  *
  * @package Aura.SqlQuery
  */
-interface QueryInterface extends WhereInterface, \Stringable
+interface QueryInterface extends WhereInterface
 {
     /**
      * Returns this query object as an SQL statement string.

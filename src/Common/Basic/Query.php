@@ -16,15 +16,8 @@ use Aura\SqlQuery\Common\SelectInterface;
  *
  * @package Aura.SqlQuery
  */
-abstract class Query implements QueryInterface
+abstract class Query extends Columns implements QueryInterface
 {
-    /**
-     * Data to be bound to the query.
-     *
-     * @var array<string,mixed>
-     */
-    protected array $bind_values = [];
-
     /**
      * The list of WHERE conditions.
      *
@@ -40,13 +33,6 @@ abstract class Query implements QueryInterface
     protected array $order_by = [];
 
     /**
-     * The list of flags.
-     *
-     * @var array<string,bool>
-     */
-    protected array $flags = [];
-
-    /**
      * Constructor.
      *
      * @param QuoterInterface  $quoter  a helper for quoting identifier names
@@ -58,121 +44,9 @@ abstract class Query implements QueryInterface
     }
 
     /**
-     * Returns this query object as an SQL statement string.
-     */
-    public function __toString(): string
-    {
-        return $this->getStatement();
-    }
-
-    /**
-     * Returns this query object as an SQL statement string.
-     */
-    public function getStatement(): string
-    {
-        return $this->build();
-    }
-
-    /**
      * Builds this query object into a string.
      */
     abstract protected function build(): string;
-
-    /**
-     * Returns the prefix to use when quoting identifier names.
-     */
-    public function getQuoteNamePrefix(): string
-    {
-        return $this->quoter->getQuoteNamePrefix();
-    }
-
-    /**
-     * Returns the suffix to use when quoting identifier names.
-     */
-    public function getQuoteNameSuffix(): string
-    {
-        return $this->quoter->getQuoteNameSuffix();
-    }
-
-    /**
-     * Binds multiple values to placeholders; merges with existing values.
-     *
-     * @param array<string,mixed> $bind_values values to bind to placeholders
-     */
-    public function bindValues(array $bind_values): self
-    {
-        // array_merge() renumbers integer keys, which is bad for
-        // question-mark placeholders
-        foreach ($bind_values as $key => $val) {
-            $this->bindValue($key, $val);
-        }
-        return $this;
-    }
-
-    /**
-     * Binds a single value to the query.
-     *
-     * @param string $name  the placeholder name or number
-     * @param mixed  $value the value to bind to the placeholder
-     */
-    public function bindValue(string $name, mixed $value): self
-    {
-        $this->bind_values[$name] = $value;
-        return $this;
-    }
-
-    /**
-     * Gets the values to bind to placeholders.
-     *
-     * @return array<string,mixed>
-     */
-    public function getBindValues(): array
-    {
-        return $this->bind_values;
-    }
-
-    /**
-     * Reset all values bound to named placeholders.
-     */
-    public function resetBindValues(): self
-    {
-        $this->bind_values = [];
-        return $this;
-    }
-
-    /**
-     * Sets or unsets specified flag.
-     *
-     * @param string $flag   Flag to set or unset
-     * @param bool   $enable Flag status - enabled or not (default true)
-     */
-    protected function setFlag(string $flag, bool $enable = true): void
-    {
-        if ($enable) {
-            $this->flags[$flag] = true;
-        } else {
-            unset($this->flags[$flag]);
-        }
-    }
-
-    /**
-     * Returns true if the specified flag was enabled by setFlag().
-     *
-     * @param string $flag Flag to check
-     */
-    protected function hasFlag(string $flag): bool
-    {
-        return isset($this->flags[$flag]);
-    }
-
-    /**
-     * Reset all query flags.
-     */
-    public function resetFlags(): self
-    {
-        $this->flags = [];
-        return $this;
-    }
 
     /**
      * Adds conditions and binds values to a clause.
@@ -278,6 +152,18 @@ abstract class Query implements QueryInterface
         return \strtr($cond, $selects);
     }
 
+    public function where(callable|string $cond, array $bind = []): self
+    {
+        $this->addClauseCondWithBind('where', 'AND', $cond, $bind);
+        return $this;
+    }
+
+    public function orWhere(callable|string $cond, array $bind = []): self
+    {
+        $this->addClauseCondWithBind('where', 'OR', $cond, $bind);
+        return $this;
+    }
+
     /**
      * Adds a column order to the query.
      *
@@ -288,34 +174,6 @@ abstract class Query implements QueryInterface
         foreach ($spec as $col) {
             $this->order_by[] = $this->quoter->quoteNamesIn($col);
         }
-        return $this;
-    }
-
-    /**
-     * Adds a WHERE condition to the query by AND.
-     *
-     * @param callable|string $cond the WHERE condition
-     * @param array           $bind Values to be bound to placeholders
-     */
-    public function where(callable|string $cond, array $bind = []): self
-    {
-        $this->addClauseCondWithBind('where', 'AND', $cond, $bind);
-        return $this;
-    }
-
-    /**
-     * Adds a WHERE condition to the query by OR. If the condition has
-     * ?-placeholders, additional arguments to the method will be bound to
-     * those placeholders sequentially.
-     *
-     * @param callable|string $cond the WHERE condition
-     * @param array           $bind Values to be bound to placeholders
-     *
-     * @see where()
-     */
-    public function orWhere(callable|string $cond, array $bind = []): self
-    {
-        $this->addClauseCondWithBind('where', 'OR', $cond, $bind);
         return $this;
     }
 }

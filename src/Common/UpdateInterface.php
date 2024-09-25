@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common;
 
+use Aura\SqlQuery\Common\Basic\OrderByInterface;
 use Aura\SqlQuery\Common\Basic\ValuesInterface;
 use Aura\SqlQuery\Common\Basic\WhereInterface;
 
@@ -17,12 +18,12 @@ use Aura\SqlQuery\Common\Basic\WhereInterface;
  *
  * @package Aura.SqlQuery
  */
-interface UpdateInterface extends ValuesInterface, WhereInterface, LimitInterface
+interface UpdateInterface extends ValuesInterface, WhereInterface, OrderByInterface, LimitInterface
 {
     /**
      * Sets the table to update.
      *
-     * @param string $table The table to update.
+     * @param string $table the table to update
      */
     public function table(string $table): self;
 }

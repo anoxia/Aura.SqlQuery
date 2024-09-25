@@ -12,6 +12,7 @@ namespace Aura\SqlQuery\Common;
 use Aura\SqlQuery\AuraSqlQueryException;
 use Aura\SqlQuery\Common\Basic\Query;
 use Aura\SqlQuery\Common\Basic\QuoterInterface;
+use Aura\SqlQuery\Common\Traits\LimitOffsetTrait;
 
 /**
  * An object for SELECT queries.

@@ -4,8 +4,14 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common\Basic;
 
-abstract class Statement implements StatementInterface
+use Aura\SqlQuery\Common\Traits\QuoteNameTrait;
+use Aura\SqlQuery\Common\Traits\ToStringTrait;
+
+abstract class Statement implements StatementInterface, \Stringable
 {
+    use QuoteNameTrait;
+    use ToStringTrait;
+
     /**
      * The list of flags.
      *
