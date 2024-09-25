@@ -8,7 +8,7 @@ use Aura\SqlQuery\Common;
 
 class InsertTest extends Common\InsertTest
 {
-    protected $db_type = 'pgsql';
+    protected string $db_type = 'pgsql';
 
     public function testReturning(): void
     {

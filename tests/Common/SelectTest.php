@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common;
 
+use Aura\SqlQuery\AuraSqlQueryException;
 use Aura\SqlQuery\Common\Basic\QueryTest;
 
 class SelectTest extends QueryTest
 {
-    protected $query_type = 'select';
+    protected string $query_type = 'select';
 
     public function testExceptionWithNoCols(): void
     {
         $this->query->from('t1');
-        $this->expectException(\Aura\SqlQuery\AuraSqlQueryException::class);
+        $this->expectException(AuraSqlQueryException::class);
         $this->query->__toString();
     }
 
@@ -169,7 +170,7 @@ EOD;
         $this->query->from('t1');
 
         $this->expectException(
-            \Aura\SqlQuery\Exception::class,
+            AuraSqlQueryException::class,
             "Cannot reference 'FROM t1' after 'FROM t1'",
         );
         $this->query->from('t1');
@@ -182,7 +183,7 @@ EOD;
         $this->query->from('t1');
 
         $this->expectException(
-            \Aura\SqlQuery\Exception::class,
+            AuraSqlQueryException::class,
             "Cannot reference 'FROM t2 AS t1' after 'FROM t1'",
         );
         $this->query->from('t2 AS t1');
@@ -212,7 +213,7 @@ EOD;
         $this->query->from('t1');
 
         $this->expectException(
-            \Aura\SqlQuery\Exception::class,
+            AuraSqlQueryException::class,
             "Cannot reference 'FROM (SELECT ...) AS t1' after 'FROM t1'",
         );
 
@@ -309,7 +310,7 @@ EOD;
         $this->query->from('t1');
 
         $this->expectException(
-            \Aura\SqlQuery\Exception::class,
+            AuraSqlQueryException::class,
             "Cannot reference 'NATURAL JOIN t1' after 'FROM t1'",
         );
         $this->query->join('natural', 't1');
@@ -447,7 +448,7 @@ EOD;
         $this->query->from('t1');
 
         $this->expectException(
-            \Aura\SqlQuery\Exception::class,
+            AuraSqlQueryException::class,
             "Cannot reference 'NATURAL JOIN (SELECT ...) AS t1' after 'FROM t1'",
         );
 
@@ -1135,11 +1136,11 @@ EOD;
         $select = $this->query
             ->cols(['foo', 'bar'])
             ->from('baz')
-            ->having(static function ($select): void {
+            ->having(static function (SelectInterface $select): void {
                 $select->having('foo > 1')
                     ->having('bar > 1')
                 ;
-            })->orHaving(static function ($select): void {
+            })->orHaving(static function (SelectInterface $select): void {
                 $select->having('foo < 1')
                     ->having('bar < 1')
                 ;

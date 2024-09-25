@@ -30,7 +30,7 @@ trait LimitTrait
      *
      * @return $this
      */
-    public function limit($limit)
+    public function limit($limit): self
     {
         $this->limit = (int) $limit;
         return $this;

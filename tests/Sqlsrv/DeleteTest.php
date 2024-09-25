@@ -8,5 +8,5 @@ use Aura\SqlQuery\Common;
 
 class DeleteTest extends Common\DeleteTest
 {
-    protected $db_type = 'sqlsrv';
+    protected string $db_type = 'sqlsrv';
 }

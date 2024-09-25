@@ -9,9 +9,7 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common\Basic;
 
-use Aura\SqlQuery\Common\AbstractBuilder;
 use Aura\SqlQuery\Common\SelectInterface;
-use Aura\SqlQuery\Common\QuoterInterface;
 
 /**
  * Abstract query object.
@@ -51,14 +49,13 @@ abstract class Query implements QueryInterface
     /**
      * Constructor.
      *
-     * @param QuoterInterface $quoter  a helper for quoting identifier names
-     * @param AbstractBuilder $builder a builder for the query
+     * @param QuoterInterface  $quoter  a helper for quoting identifier names
+     * @param BuilderInterface $builder a builder for the query
      */
-    // public function __construct(
-    //     protected QuoterInterface $quoter,
-    //     protected BuilderInterface $builder,
-    // ) {
-    // }
+    public function __construct(
+        protected QuoterInterface $quoter,
+    ) {
+    }
 
     /**
      * Returns this query object as an SQL statement string.
@@ -182,10 +179,10 @@ abstract class Query implements QueryInterface
      *
      * @param string              $clause the clause to work with, typically 'where' or 'having'
      * @param string              $andor  add the condition using this operator, typically 'AND' or 'OR'
-     * @param string              $cond   the WHERE condition
+     * @param callable|string     $cond   the WHERE condition
      * @param array<string,mixed> $bind   arguments to bind to placeholders
      */
-    protected function addClauseCondWithBind(string $clause, string $andor, string $cond, array $bind): void
+    protected function addClauseCondWithBind(string $clause, string $andor, callable|string $cond, array $bind): void
     {
         if ($cond instanceof \Closure) {
             $this->addClauseCondClosure($clause, $andor, $cond);
@@ -291,6 +288,34 @@ abstract class Query implements QueryInterface
         foreach ($spec as $col) {
             $this->order_by[] = $this->quoter->quoteNamesIn($col);
         }
+        return $this;
+    }
+
+    /**
+     * Adds a WHERE condition to the query by AND.
+     *
+     * @param callable|string $cond the WHERE condition
+     * @param array           $bind Values to be bound to placeholders
+     */
+    public function where(callable|string $cond, array $bind = []): self
+    {
+        $this->addClauseCondWithBind('where', 'AND', $cond, $bind);
+        return $this;
+    }
+
+    /**
+     * Adds a WHERE condition to the query by OR. If the condition has
+     * ?-placeholders, additional arguments to the method will be bound to
+     * those placeholders sequentially.
+     *
+     * @param callable|string $cond the WHERE condition
+     * @param array           $bind Values to be bound to placeholders
+     *
+     * @see where()
+     */
+    public function orWhere(callable|string $cond, array $bind = []): self
+    {
+        $this->addClauseCondWithBind('where', 'OR', $cond, $bind);
         return $this;
     }
 }

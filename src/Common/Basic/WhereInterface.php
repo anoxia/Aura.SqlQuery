@@ -7,7 +7,7 @@ declare(strict_types=1);
  * @license http://opensource.org/licenses/mit-license.php MIT
  */
 
-namespace Aura\SqlQuery\Common;
+namespace Aura\SqlQuery\Common\Basic;
 
 /**
  * An interface for WHERE clauses.
@@ -21,20 +21,20 @@ interface WhereInterface
      * ?-placeholders, additional arguments to the method will be bound to
      * those placeholders sequentially.
      *
-     * @param string              $cond the WHERE condition
+     * @param callable|string     $cond the WHERE condition
      * @param array<string,mixed> $bind values to be bound to placeholders
      */
-    public function where(string $cond, array $bind = []): self;
+    public function where(callable|string $cond, array $bind = []): self;
 
     /**
      * Adds a WHERE condition to the query by OR. If the condition has
      * ?-placeholders, additional arguments to the method will be bound to
      * those placeholders sequentially.
      *
-     * @param string              $cond the WHERE condition
+     * @param callable|string     $cond the WHERE condition
      * @param array<string,mixed> $bind values to be bound to placeholders
      *
      * @see where()
      */
-    public function orWhere(string $cond, array $bind = []): self;
+    public function orWhere(callable|string $cond, array $bind = []): self;
 }

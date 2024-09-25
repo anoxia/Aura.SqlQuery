@@ -8,7 +8,7 @@ use Aura\SqlQuery\Common;
 
 class UpdateTest extends Common\UpdateTest
 {
-    protected $db_type = 'pgsql';
+    protected string $db_type = 'pgsql';
 
     public function testReturning(): void
     {

@@ -8,7 +8,7 @@ use Aura\SqlQuery\Common;
 
 class InsertTest extends Common\InsertTest
 {
-    protected $db_type = 'mysql';
+    protected string $db_type = 'mysql';
 
     protected $expected_sql_with_flag = <<<'EOD'
 

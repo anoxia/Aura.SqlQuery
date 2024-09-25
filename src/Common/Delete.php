@@ -9,16 +9,16 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common;
 
-use Aura\SqlQuery\AbstractDmlQuery;
+use Aura\SqlQuery\Common\Basic\DmlQuery;
 
 /**
  * An object for DELETE queries.
  *
  * @package Aura.SqlQuery
  */
-class Delete extends AbstractDmlQuery implements DeleteInterface
+class Delete extends DmlQuery implements DeleteInterface
 {
-    use WhereTrait;
+    // use WhereTrait;
 
     /**
      * The table to delete from.
@@ -27,6 +27,12 @@ class Delete extends AbstractDmlQuery implements DeleteInterface
      */
     protected $from;
 
+    public function __construct(
+        protected QuoterInterface $quoter,
+        protected DeleteBuilder $builder,
+    ) {
+    }
+
     /**
      * Sets the table to delete from.
      *
@@ -34,7 +40,7 @@ class Delete extends AbstractDmlQuery implements DeleteInterface
      *
      * @return $this
      */
-    public function from($table)
+    public function from(string $table): self
     {
         $this->from = $this->quoter->quoteName($table);
         return $this;

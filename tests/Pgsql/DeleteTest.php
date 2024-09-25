@@ -8,7 +8,7 @@ use Aura\SqlQuery\Common;
 
 class DeleteTest extends Common\DeleteTest
 {
-    protected $db_type = 'pgsql';
+    protected string $db_type = 'pgsql';
 
     public function testReturning(): void
     {

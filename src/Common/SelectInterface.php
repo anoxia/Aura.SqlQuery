@@ -9,14 +9,23 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common;
 
-use Aura\SqlQuery\Common\Basic\QueryInterface;
+use Aura\SqlQuery\Common\Basic\ColumnsInterface;
+use Aura\SqlQuery\Common\Basic\LimitOffsetInterface;
+use Aura\SqlQuery\Common\Basic\OrderByInterface;
+use Aura\SqlQuery\Common\Basic\StatementInterface;
+use Aura\SqlQuery\Common\Basic\WhereInterface;
 
 /**
  * An interface for SELECT queries.
  *
  * @package Aura.SqlQuery
  */
-interface SelectInterface extends QueryInterface, WhereInterface, OrderByInterface, LimitOffsetInterface
+interface SelectInterface extends
+    ColumnsInterface,
+    WhereInterface,
+    OrderByInterface,
+    LimitOffsetInterface,
+    StatementInterface
 {
     /**
      * Sets the number of rows per page.
@@ -161,20 +170,20 @@ interface SelectInterface extends QueryInterface, WhereInterface, OrderByInterfa
     /**
      * Adds a HAVING condition to the query by AND.
      *
-     * @param string $cond the HAVING condition
-     * @param array  $bind values to be bound to placeholders
+     * @param callable|string $cond the HAVING condition
+     * @param array           $bind values to be bound to placeholders
      */
-    public function having(string $cond, array $bind = []): self;
+    public function having(callable|string $cond, array $bind = []): self;
 
     /**
      * Adds a HAVING condition to the query by OR.
      *
-     * @param string $cond the HAVING condition
-     * @param array  $bind values to be bound to placeholders
+     * @param callable|string $cond the HAVING condition
+     * @param array           $bind values to be bound to placeholders
      *
      * @see having()
      */
-    public function orHaving(string $cond, array $bind = []): self;
+    public function orHaving(callable|string $cond, array $bind = []): self;
 
     /**
      * Sets the limit and count by page number.

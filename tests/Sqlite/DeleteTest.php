@@ -8,7 +8,7 @@ use Aura\SqlQuery\Common;
 
 class DeleteTest extends Common\DeleteTest
 {
-    protected $db_type = 'sqlite';
+    protected string $db_type = 'sqlite';
 
     public function testOrderLimit(): void
     {

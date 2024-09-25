@@ -7,42 +7,24 @@ declare(strict_types=1);
  * @license http://opensource.org/licenses/mit-license.php MIT
  */
 
-namespace Aura\SqlQuery\Common;
+namespace Aura\SqlQuery\Common\Basic;
 
 /**
  * An interface for LIMIT...OFFSET clauses.
  *
  * @package Aura.SqlQuery
  */
-trait LimitOffsetTrait
+interface LimitOffsetInterface extends LimitInterface
 {
-    use LimitTrait;
-
-    /**
-     * The OFFSET value.
-     *
-     * @var int
-     */
-    protected $offset = 0;
-
     /**
      * Sets a limit offset on the query.
      *
      * @param int $offset start returning after this many rows
-     *
-     * @return $this
      */
-    public function offset($offset)
-    {
-        $this->offset = (int) $offset;
-        return $this;
-    }
+    public function offset(int $offset): self;
 
     /**
      * Returns the OFFSET value.
      */
-    public function getOffset(): int
-    {
-        return $this->offset;
-    }
+    public function getOffset(): int;
 }

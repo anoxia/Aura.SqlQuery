@@ -9,14 +9,15 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common;
 
-use Aura\SqlQuery\QueryInterface;
+use Aura\SqlQuery\Common\Basic\ColumnsInterface;
+use Aura\SqlQuery\Common\Basic\ValuesInterface;
 
 /**
  * An interface for INSERT queries.
  *
  * @package Aura.SqlQuery
  */
-interface InsertInterface extends QueryInterface, ValuesInterface
+interface InsertInterface extends ValuesInterface, ColumnsInterface
 {
     /**
      * Sets the table to insert into.

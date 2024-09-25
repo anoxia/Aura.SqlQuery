@@ -8,7 +8,7 @@ use Aura\SqlQuery\Common;
 
 class SelectTest extends Common\SelectTest
 {
-    protected $db_type = 'sqlsrv';
+    protected string $db_type = 'sqlsrv';
 
     public function testLimitOffset(): void
     {

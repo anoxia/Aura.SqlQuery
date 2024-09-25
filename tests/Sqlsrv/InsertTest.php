@@ -8,5 +8,5 @@ use Aura\SqlQuery\Common;
 
 class InsertTest extends Common\InsertTest
 {
-    protected $db_type = 'sqlsrv';
+    protected string $db_type = 'sqlsrv';
 }

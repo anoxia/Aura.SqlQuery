@@ -25,7 +25,7 @@ class Update extends Common\Update implements Common\OrderByInterface, Common\Li
      *
      * @return string
      */
-    protected function build()
+    protected function build(): string
     {
         return parent::build()
             . $this->builder->buildLimit($this->getLimit());
@@ -64,7 +64,7 @@ class Update extends Common\Update implements Common\OrderByInterface, Common\Li
      *
      * @return $this
      */
-    public function orderBy(array $spec)
+    public function orderBy(array $spec): self
     {
         return $this->addOrderBy($spec);
     }

@@ -8,7 +8,7 @@ use Aura\SqlQuery\Common;
 
 class DeleteTest extends Common\DeleteTest
 {
-    protected $db_type = 'mysql';
+    protected string $db_type = 'mysql';
 
     protected $expected_sql_with_flag = <<<'EOD'
 

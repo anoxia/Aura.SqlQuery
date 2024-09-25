@@ -145,7 +145,7 @@ class QueryFactory
     /**
      * Returns the Quoter object for queries; creates one if needed.
      */
-    protected function getQuoter(): Common\QuoterInterface
+    protected function getQuoter(): Common\Basic\QuoterInterface
     {
         if (! $this->quoter) {
             $this->quoter = $this->newQuoter();
@@ -156,11 +156,11 @@ class QueryFactory
     /**
      * Returns a new Quoter for the database driver.
      */
-    protected function newQuoter(): Common\QuoterInterface
+    protected function newQuoter(): Common\Basic\QuoterInterface
     {
         $quoterClass = "Aura\SqlQuery\\{$this->db}\Quoter";
         if (! \class_exists($quoterClass)) {
-            $quoterClass = Common\Quoter::class;
+            $quoterClass = Common\Basic\Quoter::class;
         }
         return new $quoterClass;
     }

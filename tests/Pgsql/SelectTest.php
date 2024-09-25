@@ -8,5 +8,5 @@ use Aura\SqlQuery\Common;
 
 class SelectTest extends Common\SelectTest
 {
-    protected $db_type = 'pgsql';
+    protected string $db_type = 'pgsql';
 }

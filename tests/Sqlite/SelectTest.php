@@ -8,5 +8,5 @@ use Aura\SqlQuery\Common;
 
 class SelectTest extends Common\SelectTest
 {
-    protected $db_type = 'sqlite';
+    protected string $db_type = 'sqlite';
 }

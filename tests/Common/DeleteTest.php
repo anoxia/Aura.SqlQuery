@@ -9,11 +9,11 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common;
 
-use Aura\SqlQuery\AbstractQueryTest;
+use Aura\SqlQuery\Common\Basic\QueryTest;
 
-class DeleteTest extends AbstractQueryTest
+class DeleteTest extends QueryTest
 {
-    protected $query_type = 'delete';
+    protected string $query_type = 'delete';
 
     public function testCommon(): void
     {

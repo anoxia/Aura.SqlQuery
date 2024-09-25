@@ -4,19 +4,22 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common\Basic;
 
+use Aura\SqlQuery\Common\DeleteInterface;
+use Aura\SqlQuery\Common\InsertInterface;
 use Aura\SqlQuery\Common\SelectInterface;
+use Aura\SqlQuery\Common\UpdateInterface;
 use Aura\SqlQuery\QueryFactory;
 use PHPUnit\Framework\TestCase;
 
 abstract class QueryTest extends TestCase
 {
-    protected $query_factory;
+    protected QueryFactory $query_factory;
 
-    protected $query_type;
+    protected string $query_type;
 
-    protected $db_type = 'Common';
+    protected string $db_type = 'Common';
 
-    protected SelectInterface $query;
+    protected SelectInterface|InsertInterface|DeleteInterface|UpdateInterface $query;
 
     protected function setUp(): void
     {

@@ -173,7 +173,7 @@ class Insert extends Common\Insert
      *
      * @return string
      */
-    protected function build()
+    protected function build(): string
     {
         $stm = parent::build();
 

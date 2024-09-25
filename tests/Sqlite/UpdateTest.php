@@ -8,7 +8,7 @@ use Aura\SqlQuery\Common;
 
 class UpdateTest extends Common\UpdateTest
 {
-    protected $db_type = 'sqlite';
+    protected string $db_type = 'sqlite';
 
     protected $expected_sql_with_flag = <<<'EOD'
 

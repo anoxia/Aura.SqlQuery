@@ -1,21 +1,16 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of Aura for PHP.
- *
- * @license http://opensource.org/licenses/mit-license.php MIT
- */
 
-namespace Aura\SqlQuery\Common;
+namespace Aura\SqlQuery\Common\Basic;
 
-/**
- * An interface for setting column values.
- *
- * @package Aura.SqlQuery
- */
-interface ValuesInterface
+interface ColumnsInterface
 {
+    /**
+     * Does the query have any columns in it?
+     */
+    public function hasCols(): bool;
+
     /**
      * Sets one column value placeholder; if an optional second parameter is
      * passed, that value is bound to the placeholder.
@@ -43,5 +38,5 @@ interface ValuesInterface
      * @param string $col   the column name
      * @param string $value the column value expression
      */
-    public function set(string $col, string $value): self;
+    public function set(string $col, ?string $value): self;
 }

@@ -9,23 +9,28 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common;
 
-use Aura\SqlQuery\AbstractDmlQuery;
+use Aura\SqlQuery\Common\Basic\DmlQuery;
+use Aura\SqlQuery\Common\Basic\QuoterInterface;
 
 /**
  * An object for UPDATE queries.
  *
  * @package Aura.SqlQuery
  */
-class Update extends AbstractDmlQuery implements UpdateInterface
+class Update extends DmlQuery implements UpdateInterface
 {
-    use WhereTrait;
-
     /**
      * The table to update.
      *
      * @var string
      */
-    protected $table;
+    protected string $table;
+
+    public function __construct(
+        protected QuoterInterface $quoter,
+        protected UpdateBuilder $builder,
+    ) {
+    }
 
     /**
      * Sets the table to update.
@@ -34,7 +39,7 @@ class Update extends AbstractDmlQuery implements UpdateInterface
      *
      * @return $this
      */
-    public function table($table)
+    public function table(string $table): self
     {
         $this->table = $this->quoter->quoteName($table);
         return $this;
@@ -45,7 +50,7 @@ class Update extends AbstractDmlQuery implements UpdateInterface
      *
      * @return string
      */
-    protected function build()
+    protected function build(): string
     {
         return 'UPDATE'
             . $this->builder->buildFlags($this->flags)
@@ -53,49 +58,5 @@ class Update extends AbstractDmlQuery implements UpdateInterface
             . $this->builder->buildValuesForUpdate($this->col_values)
             . $this->builder->buildWhere($this->where)
             . $this->builder->buildOrderBy($this->order_by);
-    }
-
-    /**
-     * Sets one column value placeholder; if an optional second parameter is
-     * passed, that value is bound to the placeholder.
-     *
-     * @param string $col   the column name
-     * @param array  $value
-     *
-     * @return $this
-     */
-    public function col($col, ...$value)
-    {
-        return $this->addCol($col, ...$value);
-    }
-
-    /**
-     * Sets multiple column value placeholders. If an element is a key-value
-     * pair, the key is treated as the column name and the value is bound to
-     * that column.
-     *
-     * @param array $cols a list of column names, optionally as key-value
-     *                    pairs where the key is a column name and the value is a bind value for
-     *                    that column
-     *
-     * @return $this
-     */
-    public function cols(array $cols)
-    {
-        return $this->addCols($cols);
-    }
-
-    /**
-     * Sets a column value directly; the value will not be escaped, although
-     * fully-qualified identifiers in the value will be quoted.
-     *
-     * @param string $col   the column name
-     * @param string $value the column value expression
-     *
-     * @return $this
-     */
-    public function set($col, $value)
-    {
-        return $this->setCol($col, $value);
     }
 }

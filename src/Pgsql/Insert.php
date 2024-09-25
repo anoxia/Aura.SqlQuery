@@ -25,7 +25,7 @@ class Insert extends Common\Insert implements ReturningInterface
      *
      * @return string
      */
-    protected function build()
+    protected function build(): string
     {
         return parent::build()
             . $this->builder->buildReturning($this->returning);
@@ -39,7 +39,7 @@ class Insert extends Common\Insert implements ReturningInterface
      * @return string the sequence name "{$into_table}_{$col}_seq", or the
      *                value from `$last_insert_id_names`
      */
-    public function getLastInsertIdName($col)
+    public function getLastInsertIdName($col): mixed
     {
         $name = parent::getLastInsertIdName($col);
         if (! $name) {

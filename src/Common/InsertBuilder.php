@@ -20,23 +20,18 @@ class InsertBuilder extends Basic\Builder
      * Builds the INTO clause.
      *
      * @param string $into the INTO element
-     *
-     * @return string
      */
-    public function buildInto($into)
+    public function buildInto($into): string
     {
         return " INTO {$into}";
     }
-
 
     /**
      * Builds the inserted columns and values of the statement.
      *
      * @param array $col_values the column names and values
-     *
-     * @return string
      */
-    public function buildValuesForInsert(array $col_values)
+    public function buildValuesForInsert(array $col_values): string
     {
         return ' ('
             . $this->indentCsv(\array_keys($col_values))
@@ -51,10 +46,8 @@ class InsertBuilder extends Basic\Builder
      * @param array $col_order       the column names to insert, in order
      * @param array $col_values_bulk the bulk-insert values, in the same order
      *                               the column names
-     *
-     * @return string
      */
-    public function buildValuesForBulkInsert(array $col_order, array $col_values_bulk)
+    public function buildValuesForBulkInsert(array $col_order, array $col_values_bulk): string
     {
         $cols = '    (' . \implode(', ', $col_order) . ')';
         $vals = [];

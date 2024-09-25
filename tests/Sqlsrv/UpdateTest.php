@@ -8,5 +8,5 @@ use Aura\SqlQuery\Common;
 
 class UpdateTest extends Common\UpdateTest
 {
-    protected $db_type = 'sqlsrv';
+    protected string $db_type = 'sqlsrv';
 }

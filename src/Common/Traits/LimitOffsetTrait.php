@@ -14,17 +14,35 @@ namespace Aura\SqlQuery\Common;
  *
  * @package Aura.SqlQuery
  */
-interface LimitOffsetInterface extends LimitInterface
+trait LimitOffsetTrait
 {
+    use LimitTrait;
+
+    /**
+     * The OFFSET value.
+     *
+     * @var int
+     */
+    protected $offset = 0;
+
     /**
      * Sets a limit offset on the query.
      *
      * @param int $offset start returning after this many rows
+     *
+     * @return $this
      */
-    public function offset(int $offset): self;
+    public function offset($offset): self
+    {
+        $this->offset = (int) $offset;
+        return $this;
+    }
 
     /**
      * Returns the OFFSET value.
      */
-    public function getOffset(): int;
+    public function getOffset(): int
+    {
+        return $this->offset;
+    }
 }

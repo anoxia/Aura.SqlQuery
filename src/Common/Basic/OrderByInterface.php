@@ -7,7 +7,7 @@ declare(strict_types=1);
  * @license http://opensource.org/licenses/mit-license.php MIT
  */
 
-namespace Aura\SqlQuery\Common;
+namespace Aura\SqlQuery\Common\Basic;
 
 /**
  * An interface for ORDER BY clauses.

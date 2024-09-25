@@ -9,29 +9,29 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common;
 
-use Aura\SqlQuery\AbstractDmlQuery;
 use Aura\SqlQuery\AuraSqlQueryException;
+use Aura\SqlQuery\Common\Basic\Columns;
+use Aura\SqlQuery\Common\Basic\QuoterInterface;
 
 /**
  * An object for INSERT queries.
  *
  * @package Aura.SqlQuery
  */
-class Insert extends AbstractDmlQuery implements InsertInterface
+class Insert extends Columns implements InsertInterface, \Stringable
 {
+    use Traits\QuoteNameTrait;
+    use Traits\ToStringTrait;
+
     /**
      * The table to insert into (quoted).
-     *
-     * @var string
      */
-    protected $into;
+    protected string $into;
 
     /**
      * The table to insert into (raw, for last-insert-id use).
-     *
-     * @var string
      */
-    protected $into_raw;
+    protected string $into_raw;
 
     /**
      * A map of fully-qualified `table.column` names to last-insert-id names.
@@ -40,29 +40,23 @@ class Insert extends AbstractDmlQuery implements InsertInterface
      *
      * @var array<string,mixed>
      */
-    protected $last_insert_id_names;
+    protected array $last_insert_id_names;
 
     /**
      * The current row-number we are adding column values for. This comes into
      * play only with bulk inserts.
-     *
-     * @var int
      */
-    protected $row = 0;
+    protected int $row = 0;
 
     /**
      * A collection of `$col_values` for previous rows in bulk inserts.
-     *
-     * @var array
      */
-    protected $col_values_bulk = [];
+    protected array $col_values_bulk = [];
 
     /**
      * A collection of `$bind_values` for previous rows in bulk inserts.
-     *
-     * @var array
      */
-    protected $bind_values_bulk = [];
+    protected array $bind_values_bulk = [];
 
     /**
      * The order in which columns will be bulk-inserted; this is taken from the
@@ -71,6 +65,12 @@ class Insert extends AbstractDmlQuery implements InsertInterface
      * @var array
      */
     protected $col_order = [];
+
+    public function __construct(
+        protected QuoterInterface $quoter,
+        protected InsertBuilder $builder,
+    ) {
+    }
 
     /**
      * Sets the map of fully-qualified `table.column` names to last-insert-id
@@ -87,10 +87,8 @@ class Insert extends AbstractDmlQuery implements InsertInterface
      * Sets the table to insert into.
      *
      * @param string $into the table to insert into
-     *
-     * @return $this
      */
-    public function into($into)
+    public function into(string $into): self
     {
         $this->into_raw = $into;
         $this->into = $this->quoter->quoteName($into);
@@ -124,56 +122,10 @@ class Insert extends AbstractDmlQuery implements InsertInterface
      * @return mixed normally null, since most drivers do not need a name;
      *               alternatively, a string from `$last_insert_id_names`
      */
-    public function getLastInsertIdName($col)
+    public function getLastInsertIdName($col): mixed
     {
         $key = $this->into_raw . '.' . $col;
-        if (isset($this->last_insert_id_names[$key])) {
-            return $this->last_insert_id_names[$key];
-        }
-    }
-
-    /**
-     * Sets one column value placeholder; if an optional second parameter is
-     * passed, that value is bound to the placeholder.
-     *
-     * @param string $col   the column name
-     * @param array  $value optional: a value to bind to the placeholder
-     *
-     * @return $this
-     */
-    public function col($col, ...$value)
-    {
-        return $this->addCol($col, ...$value);
-    }
-
-    /**
-     * Sets multiple column value placeholders. If an element is a key-value
-     * pair, the key is treated as the column name and the value is bound to
-     * that column.
-     *
-     * @param array $cols a list of column names, optionally as key-value
-     *                    pairs where the key is a column name and the value is a bind value for
-     *                    that column
-     *
-     * @return $this
-     */
-    public function cols(array $cols)
-    {
-        return $this->addCols($cols);
-    }
-
-    /**
-     * Sets a column value directly; the value will not be escaped, although
-     * fully-qualified identifiers in the value will be quoted.
-     *
-     * @param string $col   the column name
-     * @param string $value the column value expression
-     *
-     * @return $this
-     */
-    public function set($col, $value)
-    {
-        return $this->setCol($col, $value);
+        return $this->last_insert_id_names[$key] ?? null;
     }
 
     /**
@@ -181,7 +133,7 @@ class Insert extends AbstractDmlQuery implements InsertInterface
      *
      * @return array
      */
-    public function getBindValues()
+    public function getBindValues(): array
     {
         return \array_merge(parent::getBindValues(), $this->bind_values_bulk);
     }
@@ -194,7 +146,7 @@ class Insert extends AbstractDmlQuery implements InsertInterface
      *
      * @return $this
      */
-    public function addRows(array $rows)
+    public function addRows(array $rows): self
     {
         foreach ($rows as $cols) {
             $this->addRow($cols);
@@ -220,7 +172,7 @@ class Insert extends AbstractDmlQuery implements InsertInterface
      *
      * @return $this
      */
-    public function addRow(array $cols = [])
+    public function addRow(array $cols = []): self
     {
         if ([] === $this->col_values) {
             return $this->cols($cols);
@@ -242,7 +194,7 @@ class Insert extends AbstractDmlQuery implements InsertInterface
      */
     protected function finishRow(): void
     {
-        if (empty($this->col_values)) {
+        if ([] === $this->col_values) {
             return;
         }
 

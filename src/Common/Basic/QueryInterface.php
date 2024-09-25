@@ -14,7 +14,7 @@ namespace Aura\SqlQuery\Common\Basic;
  *
  * @package Aura.SqlQuery
  */
-interface QueryInterface extends \Stringable
+interface QueryInterface extends WhereInterface, \Stringable
 {
     /**
      * Returns this query object as an SQL statement string.
@@ -30,28 +30,6 @@ interface QueryInterface extends \Stringable
      * Returns the suffix to use when quoting identifier names.
      */
     public function getQuoteNameSuffix(): string;
-
-    /**
-     * Adds values to bind into the query; merges with existing values.
-     *
-     * @param array<string,mixed> $bind_values values to bind to placeholders
-     */
-    public function bindValues(array $bind_values): self;
-
-    /**
-     * Binds a single value to the query.
-     *
-     * @param string $name  the placeholder name or number
-     * @param mixed  $value the value to bind to the placeholder
-     */
-    public function bindValue(string $name, mixed $value): self;
-
-    /**
-     * Gets the values to bind into the query.
-     *
-     * @return array<string,mixed>
-     */
-    public function getBindValues(): array;
 
     /**
      * Reset all query flags.

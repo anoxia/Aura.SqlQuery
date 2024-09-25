@@ -11,7 +11,7 @@ namespace Aura\SqlQuery\Common;
 
 use Aura\SqlQuery\AuraSqlQueryException;
 use Aura\SqlQuery\Common\Basic\Query;
-use Aura\SqlQuery\SqlQueryException;
+use Aura\SqlQuery\Common\Basic\QuoterInterface;
 
 /**
  * An object for SELECT queries.
@@ -20,7 +20,6 @@ use Aura\SqlQuery\SqlQueryException;
  */
 class Select extends Query implements SelectInterface
 {
-    use WhereTrait;
     use LimitOffsetTrait {
         limit as setLimit;
         offset as setOffset;
@@ -395,13 +394,13 @@ class Select extends Query implements SelectInterface
         return $this;
     }
 
-    public function having(string $cond, array $bind = []): self
+    public function having(callable|string $cond, array $bind = []): self
     {
         $this->addClauseCondWithBind('having', 'AND', $cond, $bind);
         return $this;
     }
 
-    public function orHaving(string $cond, array $bind = []): self
+    public function orHaving(callable|string $cond, array $bind = []): self
     {
         $this->addClauseCondWithBind('having', 'OR', $cond, $bind);
         return $this;
