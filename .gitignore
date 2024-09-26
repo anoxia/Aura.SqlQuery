@@ -4,6 +4,7 @@
 !.github/
 
 composer
+/composer.lock
 vendor/
 coverage/
 library/
