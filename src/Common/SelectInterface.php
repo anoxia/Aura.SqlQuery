@@ -170,7 +170,7 @@ interface SelectInterface extends QueryInterface, WhereInterface, OrderByInterfa
     /**
      * Adds a HAVING condition to the query by AND.
      *
-     * @param callable|string              $cond the HAVING condition
+     * @param callable|string     $cond the HAVING condition
      * @param array<string,mixed> $bind values to be bound to placeholders
      */
     public function having(callable|string $cond, array $bind = []): self;
@@ -178,7 +178,7 @@ interface SelectInterface extends QueryInterface, WhereInterface, OrderByInterfa
     /**
      * Adds a HAVING condition to the query by OR.
      *
-     * @param callable|string              $cond the HAVING condition
+     * @param callable|string     $cond the HAVING condition
      * @param array<string,mixed> $bind values to be bound to placeholders
      *
      * @see having()

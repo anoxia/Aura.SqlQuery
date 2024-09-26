@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Aura\SqlQuery\Common;
 
 use Aura\SqlQuery\AuraSqlQueryException;
-use Aura\SqlQuery\Common\QueryTest;
 
 class SelectTest extends QueryTest
 {

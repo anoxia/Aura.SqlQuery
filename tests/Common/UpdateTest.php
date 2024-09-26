@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common;
 
-use Aura\SqlQuery\Common\QueryTest;
-
 class UpdateTest extends QueryTest
 {
     protected string $query_type = 'Update';
