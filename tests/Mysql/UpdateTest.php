@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aura\SqlQuery\Mysql;
+namespace Aura\SqlQuery\MySQL;
 
 use Aura\SqlQuery\Common;
 

@@ -14,14 +14,14 @@ namespace Aura\SqlQuery\Common;
  *
  * @package Aura.SqlQuery
  */
-class InsertBuilder extends Basic\Builder
+class InsertBuilder extends Builder
 {
     /**
      * Builds the INTO clause.
      *
      * @param string $into the INTO element
      */
-    public function buildInto($into): string
+    public function buildInto(string $into): string
     {
         return " INTO {$into}";
     }
@@ -29,7 +29,7 @@ class InsertBuilder extends Basic\Builder
     /**
      * Builds the inserted columns and values of the statement.
      *
-     * @param array $col_values the column names and values
+     * @param array<string,string> $col_values the column names and values
      */
     public function buildValuesForInsert(array $col_values): string
     {
@@ -43,9 +43,9 @@ class InsertBuilder extends Basic\Builder
     /**
      * Builds the bulk-inserted columns and values of the statement.
      *
-     * @param array $col_order       the column names to insert, in order
-     * @param array $col_values_bulk the bulk-insert values, in the same order
-     *                               the column names
+     * @param string[]            $col_order       the column names to insert, in order
+     * @param array<int,string[]> $col_values_bulk the bulk-insert values, in the same order
+     *                                             the column names
      */
     public function buildValuesForBulkInsert(array $col_order, array $col_values_bulk): string
     {

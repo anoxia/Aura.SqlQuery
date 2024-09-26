@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aura\SqlQuery\Sqlite;
+namespace Aura\SqlQuery\SQLIte;
 
 use Aura\SqlQuery\Common;
 

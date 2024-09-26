@@ -14,16 +14,14 @@ namespace Aura\SqlQuery\Common;
  *
  * @package Aura.SqlQuery
  */
-class DeleteBuilder extends Basic\Builder
+class DeleteBuilder extends Builder
 {
     /**
      * Builds the FROM clause.
      *
      * @param string $from the FROM element
-     *
-     * @return string
      */
-    public function buildFrom($from)
+    public function buildFrom(string $from): string
     {
         return " FROM {$from}";
     }

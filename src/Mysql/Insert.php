@@ -7,9 +7,10 @@ declare(strict_types=1);
  * @license http://opensource.org/licenses/mit-license.php MIT
  */
 
-namespace Aura\SqlQuery\Mysql;
+namespace Aura\SqlQuery\MySQL;
 
 use Aura\SqlQuery\Common;
+use Aura\SqlQuery\Common\QuoterInterface;
 
 /**
  * An object for MySQL INSERT queries.
@@ -34,14 +35,21 @@ class Insert extends Common\Insert
     protected $col_on_update_values;
 
     /**
+     * @param InsertBuilder $builder
+     */
+    public function __construct(
+        protected QuoterInterface $quoter,
+        protected mixed $builder,
+    ) {
+    }
+
+    /**
      * Use a REPLACE statement.
      * Matches similar orReplace() function for Sqlite
      *
      * @param bool $enable set or unset flag (default true)
-     *
-     * @return $this
      */
-    public function orReplace($enable = true)
+    public function orReplace(bool $enable = true): self
     {
         $this->use_replace = $enable;
         return $this;
@@ -51,10 +59,8 @@ class Insert extends Common\Insert
      * Adds or removes HIGH_PRIORITY flag.
      *
      * @param bool $enable set or unset flag (default true)
-     *
-     * @return $this
      */
-    public function highPriority($enable = true)
+    public function highPriority(bool $enable = true): self
     {
         $this->setFlag('HIGH_PRIORITY', $enable);
         return $this;
@@ -64,10 +70,8 @@ class Insert extends Common\Insert
      * Adds or removes LOW_PRIORITY flag.
      *
      * @param bool $enable set or unset flag (default true)
-     *
-     * @return $this
      */
-    public function lowPriority($enable = true)
+    public function lowPriority(bool $enable = true): self
     {
         $this->setFlag('LOW_PRIORITY', $enable);
         return $this;
@@ -77,10 +81,8 @@ class Insert extends Common\Insert
      * Adds or removes IGNORE flag.
      *
      * @param bool $enable set or unset flag (default true)
-     *
-     * @return $this
      */
-    public function ignore($enable = true)
+    public function ignore(bool $enable = true): self
     {
         $this->setFlag('IGNORE', $enable);
         return $this;
@@ -90,10 +92,8 @@ class Insert extends Common\Insert
      * Adds or removes DELAYED flag.
      *
      * @param bool $enable set or unset flag (default true)
-     *
-     * @return $this
      */
-    public function delayed($enable = true)
+    public function delayed(bool $enable = true): self
     {
         $this->setFlag('DELAYED', $enable);
         return $this;
@@ -106,10 +106,8 @@ class Insert extends Common\Insert
      *
      * @param string $col   the column name
      * @param array  $value optional: a value to bind to the placeholder
-     *
-     * @return $this
      */
-    public function onDuplicateKeyUpdateCol($col, ...$value)
+    public function onDuplicateKeyUpdateCol(string $col, ...$value): self
     {
         $key = $this->quoter->quoteName($col);
         $bind = $col . '__on_duplicate_key';
@@ -125,13 +123,11 @@ class Insert extends Common\Insert
      * section. If an element is a key-value pair, the key is treated as the
      * column name and the value is bound to that column.
      *
-     * @param array $cols a list of column names, optionally as key-value
-     *                    pairs where the key is a column name and the value is a bind value for
-     *                    that column
-     *
-     * @return $this
+     * @param array<string,mixed> $cols a list of column names, optionally as key-value
+     *                                  pairs where the key is a column name and the value is a bind value for
+     *                                  that column
      */
-    public function onDuplicateKeyUpdateCols(array $cols)
+    public function onDuplicateKeyUpdateCols(array $cols): self
     {
         foreach ($cols as $key => $val) {
             if (\is_int($key)) {
@@ -153,10 +149,8 @@ class Insert extends Common\Insert
      *
      * @param string $col   the column name
      * @param string $value the column value expression
-     *
-     * @return $this
      */
-    public function onDuplicateKeyUpdate($col, $value)
+    public function onDuplicateKeyUpdate(string $col, ?string $value): self
     {
         if (null === $value) {
             $value = 'NULL';
@@ -170,8 +164,6 @@ class Insert extends Common\Insert
 
     /**
      * Builds this query object into a string.
-     *
-     * @return string
      */
     protected function build(): string
     {

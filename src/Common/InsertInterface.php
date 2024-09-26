@@ -9,15 +9,12 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common;
 
-use Aura\SqlQuery\Common\Basic\ColumnsInterface;
-use Aura\SqlQuery\Common\Basic\ValuesInterface;
-
 /**
  * An interface for INSERT queries.
  *
  * @package Aura.SqlQuery
  */
-interface InsertInterface extends ValuesInterface, ColumnsInterface
+interface InsertInterface extends QueryInterface, ValuesInterface
 {
     /**
      * Sets the table to insert into.
@@ -30,7 +27,7 @@ interface InsertInterface extends ValuesInterface, ColumnsInterface
      * Sets the map of fully-qualified `table.column` names to last-insert-id
      * names. Generally useful only for extended tables in Postgres.
      *
-     * @param array<string,mixed> $last_insert_id_names the list of ID names
+     * @param string[] $last_insert_id_names the list of ID names
      */
     public function setLastInsertIdNames(array $last_insert_id_names): void;
 
@@ -42,13 +39,13 @@ interface InsertInterface extends ValuesInterface, ColumnsInterface
      * @return mixed normally null, since most drivers do not need a name;
      *               alternatively, a string from `$last_insert_id_names`
      */
-    public function getLastInsertIdName(string $col): mixed;
+    public function getLastInsertIdName(string $col): ?string;
 
     /**
      * Adds multiple rows for bulk insert.
      *
-     * @param array $rows An array of rows, where each element is an array of
-     *                    column key-value pairs. The values are bound to placeholders.
+     * @param array<int,array<string,mixed>> $rows An array of rows, where each element is an array of
+     *                                             column key-value pairs. The values are bound to placeholders.
      */
     public function addRows(array $rows): self;
 
@@ -62,8 +59,8 @@ interface InsertInterface extends ValuesInterface, ColumnsInterface
      * `set()` to work with the newly-added row. Calling `addRow()` again will
      * finish off the current row and start a new one.
      *
-     * @param array $cols an array of column key-value pairs; the values are
-     *                    bound to placeholders
+     * @param array<string,mixed> $cols an array of column key-value pairs; the values are
+     *                                  bound to placeholders
      */
     public function addRow(array $cols = []): self;
 }

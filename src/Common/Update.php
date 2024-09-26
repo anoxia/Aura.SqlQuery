@@ -9,9 +9,6 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common;
 
-use Aura\SqlQuery\Common\Basic\DmlQuery;
-use Aura\SqlQuery\Common\Basic\QuoterInterface;
-
 /**
  * An object for UPDATE queries.
  *
@@ -19,26 +16,22 @@ use Aura\SqlQuery\Common\Basic\QuoterInterface;
  */
 class Update extends DmlQuery implements UpdateInterface
 {
+    use WhereTrait;
+
     /**
      * The table to update.
-     *
-     * @var string
      */
     protected string $table;
 
+    /**
+     * @param UpdateBuilder $builder
+     */
     public function __construct(
         protected QuoterInterface $quoter,
-        protected UpdateBuilder $builder,
+        protected mixed $builder,
     ) {
     }
 
-    /**
-     * Sets the table to update.
-     *
-     * @param string $table the table to update
-     *
-     * @return $this
-     */
     public function table(string $table): self
     {
         $this->table = $this->quoter->quoteName($table);
@@ -47,8 +40,6 @@ class Update extends DmlQuery implements UpdateInterface
 
     /**
      * Builds this query object into a string.
-     *
-     * @return string
      */
     protected function build(): string
     {
@@ -58,5 +49,20 @@ class Update extends DmlQuery implements UpdateInterface
             . $this->builder->buildValuesForUpdate($this->col_values)
             . $this->builder->buildWhere($this->where)
             . $this->builder->buildOrderBy($this->order_by);
+    }
+
+    public function col(string $col, ...$value): self
+    {
+        return $this->addCol($col, ...$value);
+    }
+
+    public function cols(array $cols): self
+    {
+        return $this->addCols($cols);
+    }
+
+    public function set(string $col, ?string $value): self
+    {
+        return $this->setCol($col, $value);
     }
 }

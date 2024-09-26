@@ -9,14 +9,12 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common;
 
-use Aura\SqlQuery\Common\Basic\WhereInterface;
-
 /**
  * An interface for DELETE queries.
  *
  * @package Aura.SqlQuery
  */
-interface DeleteInterface extends WhereInterface, LimitInterface
+interface DeleteInterface extends QueryInterface, WhereInterface
 {
     /**
      * Sets the table to delete from.

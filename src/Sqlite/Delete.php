@@ -7,7 +7,7 @@ declare(strict_types=1);
  * @license http://opensource.org/licenses/mit-license.php MIT
  */
 
-namespace Aura\SqlQuery\Sqlite;
+namespace Aura\SqlQuery\SQLite;
 
 use Aura\SqlQuery\Common;
 
@@ -20,24 +20,12 @@ class Delete extends Common\Delete implements Common\OrderByInterface, Common\Li
 {
     use Common\LimitOffsetTrait;
 
-    /**
-     * Builds the statement.
-     *
-     * @return string
-     */
     protected function build(): string
     {
         return parent::build()
             . $this->builder->buildLimitOffset($this->getLimit(), $this->offset);
     }
 
-    /**
-     * Adds a column order to the query.
-     *
-     * @param array $spec the columns and direction to order by
-     *
-     * @return $this
-     */
     public function orderBy(array $spec): self
     {
         return $this->addOrderBy($spec);

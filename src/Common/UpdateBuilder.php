@@ -14,16 +14,14 @@ namespace Aura\SqlQuery\Common;
  *
  * @package Aura.SqlQuery
  */
-class UpdateBuilder extends Basic\Builder
+class UpdateBuilder extends Builder
 {
     /**
      * Builds the table portion of the UPDATE.
      *
      * @param string $table the table name
-     *
-     * @return string
      */
-    public function buildTable($table)
+    public function buildTable(string $table): string
     {
         return " {$table}";
     }
@@ -31,11 +29,9 @@ class UpdateBuilder extends Basic\Builder
     /**
      * Builds the columns and values for the statement.
      *
-     * @param array $col_values the columns and values
-     *
-     * @return string
+     * @param array<string,string> $col_values the columns and values
      */
-    public function buildValuesForUpdate(array $col_values)
+    public function buildValuesForUpdate(array $col_values): string
     {
         $values = [];
         foreach ($col_values as $col => $value) {

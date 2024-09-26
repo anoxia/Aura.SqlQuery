@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Aura\SqlQuery\Common;
 
 use Aura\SqlQuery\AuraSqlQueryException;
-use Aura\SqlQuery\Common\Basic\QueryTest;
+use Aura\SqlQuery\Common\QueryTest;
 
 class SelectTest extends QueryTest
 {
-    protected string $query_type = 'select';
+    protected string $query_type = 'Select';
 
     public function testExceptionWithNoCols(): void
     {

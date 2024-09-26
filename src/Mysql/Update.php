@@ -7,7 +7,7 @@ declare(strict_types=1);
  * @license http://opensource.org/licenses/mit-license.php MIT
  */
 
-namespace Aura\SqlQuery\Mysql;
+namespace Aura\SqlQuery\MySQL;
 
 use Aura\SqlQuery\Common;
 
@@ -22,8 +22,6 @@ class Update extends Common\Update implements Common\OrderByInterface, Common\Li
 
     /**
      * Builds the statement.
-     *
-     * @return string
      */
     protected function build(): string
     {
@@ -35,10 +33,8 @@ class Update extends Common\Update implements Common\OrderByInterface, Common\Li
      * Adds or removes LOW_PRIORITY flag.
      *
      * @param bool $enable set or unset flag (default true)
-     *
-     * @return $this
      */
-    public function lowPriority($enable = true)
+    public function lowPriority(bool $enable = true): self
     {
         $this->setFlag('LOW_PRIORITY', $enable);
         return $this;
@@ -48,10 +44,8 @@ class Update extends Common\Update implements Common\OrderByInterface, Common\Li
      * Adds or removes IGNORE flag.
      *
      * @param bool $enable set or unset flag (default true)
-     *
-     * @return $this
      */
-    public function ignore($enable = true)
+    public function ignore(bool $enable = true): self
     {
         $this->setFlag('IGNORE', $enable);
         return $this;
@@ -60,9 +54,7 @@ class Update extends Common\Update implements Common\OrderByInterface, Common\Li
     /**
      * Adds a column order to the query.
      *
-     * @param array $spec the columns and direction to order by
-     *
-     * @return $this
+     * @param string[] $spec the columns and direction to order by
      */
     public function orderBy(array $spec): self
     {

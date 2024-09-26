@@ -10,15 +10,14 @@ declare(strict_types=1);
 namespace Aura\SqlQuery\Common;
 
 use Aura\SqlQuery\AuraSqlQueryException;
-use Aura\SqlQuery\Common\Basic\Columns;
-use Aura\SqlQuery\Common\Basic\QuoterInterface;
+use Aura\SqlQuery\Exception;
 
 /**
  * An object for INSERT queries.
  *
  * @package Aura.SqlQuery
  */
-class Insert extends Columns implements InsertInterface
+class Insert extends DmlQuery implements InsertInterface
 {
     /**
      * The table to insert into (quoted).
@@ -35,7 +34,7 @@ class Insert extends Columns implements InsertInterface
      * This is used to look up the right last-insert-id name for a given table
      * and column. Generally useful only for extended tables in Postgres.
      *
-     * @var array<string,mixed>
+     * @var array<string,string>
      */
     protected array $last_insert_id_names;
 
@@ -47,11 +46,15 @@ class Insert extends Columns implements InsertInterface
 
     /**
      * A collection of `$col_values` for previous rows in bulk inserts.
+     *
+     * @var array<int,array<string,mixed>>
      */
     protected array $col_values_bulk = [];
 
     /**
      * A collection of `$bind_values` for previous rows in bulk inserts.
+     *
+     * @var array<string,mixed>
      */
     protected array $bind_values_bulk = [];
 
@@ -59,42 +62,26 @@ class Insert extends Columns implements InsertInterface
      * The order in which columns will be bulk-inserted; this is taken from the
      * very first inserted row.
      *
-     * @var array
+     * @var string[]
      */
-    protected $col_order = [];
+    protected array $col_order = [];
 
+    /**
+     * @param InsertBuilder $builder
+     */
     public function __construct(
         protected QuoterInterface $quoter,
-        protected InsertBuilder $builder,
+        protected mixed $builder,
     ) {
     }
 
-    /**
-     * Sets the map of fully-qualified `table.column` names to last-insert-id
-     * names. Generally useful only for extended tables in Postgres.
-     *
-     * @param array $last_insert_id_names the list of ID names
-     */
-    public function setLastInsertIdNames(array $last_insert_id_names): void
-    {
-        $this->last_insert_id_names = $last_insert_id_names;
-    }
-
-    /**
-     * Sets the table to insert into.
-     *
-     * @param string $into the table to insert into
-     */
-    public function into(string $into): self
+    public function into($into): self
     {
         $this->into_raw = $into;
         $this->into = $this->quoter->quoteName($into);
         return $this;
     }
 
-    /**
-     * Builds this query object into a string.
-     */
     protected function build(): string
     {
         $stm = 'INSERT'
@@ -111,38 +98,44 @@ class Insert extends Columns implements InsertInterface
         return $stm;
     }
 
-    /**
-     * Returns the proper name for passing to `PDO::lastInsertId()`.
-     *
-     * @param string $col the last insert ID column
-     *
-     * @return mixed normally null, since most drivers do not need a name;
-     *               alternatively, a string from `$last_insert_id_names`
-     */
-    public function getLastInsertIdName($col): mixed
+    public function setLastInsertIdNames(array $last_insert_id_names): void
+    {
+        $this->last_insert_id_names = $last_insert_id_names;
+    }
+
+    public function getLastInsertIdName(string $col): ?string
     {
         $key = $this->into_raw . '.' . $col;
-        return $this->last_insert_id_names[$key] ?? null;
+        if (isset($this->last_insert_id_names[$key])) {
+            return $this->last_insert_id_names[$key];
+        }
+
+        return null;
+    }
+
+    public function col(string $col, ...$value): self
+    {
+        return $this->addCol($col, ...$value);
+    }
+
+    public function cols(array $cols): self
+    {
+        return $this->addCols($cols);
+    }
+
+    public function set(string $col, ?string $value): self
+    {
+        return $this->setCol($col, $value);
     }
 
     /**
      * Gets the values to bind to placeholders.
-     *
-     * @return array
      */
     public function getBindValues(): array
     {
         return \array_merge(parent::getBindValues(), $this->bind_values_bulk);
     }
 
-    /**
-     * Adds multiple rows for bulk insert.
-     *
-     * @param array $rows An array of rows, where each element is an array of
-     *                    column key-value pairs. The values are bound to placeholders.
-     *
-     * @return $this
-     */
     public function addRows(array $rows): self
     {
         foreach ($rows as $cols) {
@@ -154,28 +147,13 @@ class Insert extends Columns implements InsertInterface
         return $this;
     }
 
-    /**
-     * Add one row for bulk insert; increments the row counter and optionally
-     * adds columns to the new row.
-     *
-     * When adding the first row, the counter is not incremented.
-     *
-     * After calling `addRow()`, you can further call `col()`, `cols()`, and
-     * `set()` to work with the newly-added row. Calling `addRow()` again will
-     * finish off the current row and start a new one.
-     *
-     * @param array $cols an array of column key-value pairs; the values are
-     *                    bound to placeholders
-     *
-     * @return $this
-     */
     public function addRow(array $cols = []): self
     {
-        if ([] === $this->col_values) {
+        if (empty($this->col_values)) {
             return $this->cols($cols);
         }
 
-        if ([] === $this->col_order) {
+        if (empty($this->col_order)) {
             $this->col_order = \array_keys($this->col_values);
         }
 
@@ -191,7 +169,7 @@ class Insert extends Columns implements InsertInterface
      */
     protected function finishRow(): void
     {
-        if ([] === $this->col_values) {
+        if (empty($this->col_values)) {
             return;
         }
 

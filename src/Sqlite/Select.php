@@ -7,7 +7,7 @@ declare(strict_types=1);
  * @license http://opensource.org/licenses/mit-license.php MIT
  */
 
-namespace Aura\SqlQuery\Sqlite;
+namespace Aura\SqlQuery\SQLite;
 
 use Aura\SqlQuery\Common;
 

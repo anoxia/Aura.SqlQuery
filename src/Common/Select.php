@@ -10,9 +10,6 @@ declare(strict_types=1);
 namespace Aura\SqlQuery\Common;
 
 use Aura\SqlQuery\AuraSqlQueryException;
-use Aura\SqlQuery\Common\Basic\Query;
-use Aura\SqlQuery\Common\Basic\QuoterInterface;
-use Aura\SqlQuery\Common\Traits\LimitOffsetTrait;
 
 /**
  * An object for SELECT queries.
@@ -21,15 +18,14 @@ use Aura\SqlQuery\Common\Traits\LimitOffsetTrait;
  */
 class Select extends Query implements SelectInterface
 {
-    use LimitOffsetTrait {
-        limit as setLimit;
-        offset as setOffset;
-    }
+    use WhereTrait;
+    use LimitOffsetTrait { limit as setLimit;
+        offset as setOffset; }
 
     /**
      * An array of union SELECT statements.
      *
-     * @var array<string>
+     * @var string[]
      */
     protected array $union = [];
 
@@ -41,14 +37,14 @@ class Select extends Query implements SelectInterface
     /**
      * The columns to be selected.
      *
-     * @var array<string,string>
+     * @var array<string,mixed>
      */
     protected array $cols = [];
 
     /**
      * Select from these tables; includes JOIN clauses.
      *
-     * @var array<array<string>>
+     * @var string[]
      */
     protected array $from = [];
 
@@ -60,21 +56,21 @@ class Select extends Query implements SelectInterface
     /**
      * Tracks which JOIN clauses are attached to which FROM tables.
      *
-     * @var array<int,array<string>>
+     * @var string[]
      */
     protected array $join = [];
 
     /**
      * GROUP BY these columns.
      *
-     * @var array<string>
+     * @var string[]
      */
     protected array $group_by = [];
 
     /**
      * The list of HAVING conditions.
      *
-     * @var array<string>
+     * @var string[]
      */
     protected array $having = [];
 
@@ -91,51 +87,31 @@ class Select extends Query implements SelectInterface
     /**
      * Tracks table references to avoid duplicate identifiers.
      *
-     * @var array<string,string>
+     * @var string[]
      */
     protected array $table_refs = [];
 
+    /**
+     * @param SelectBuilder $builder
+     */
     public function __construct(
         protected QuoterInterface $quoter,
-        protected SelectBuilder $builder,
+        protected mixed $builder,
     ) {
     }
 
-    /**
-     * Returns this query object as an SQL statement string.
-     *
-     * @return string an SQL statement string
-     */
     public function getStatement(): string
     {
         $union = '';
-        if ([] !== $this->union) {
+        if (! empty($this->union)) {
             $union = \implode(\PHP_EOL, $this->union) . \PHP_EOL;
         }
         return $union . $this->build();
     }
 
-    public function orderBy(array $spec): self
-    {
-        return $this->addOrderBy($spec);
-    }
-
-    /**
-     * Updates the limit and offset values when changing pagination.
-     */
-    protected function setPagingLimitOffset(): void
-    {
-        $this->setLimit(0);
-        $this->setOffset(0);
-        if ($this->page) {
-            $this->setLimit($this->paging);
-            $this->setOffset($this->paging * ($this->page - 1));
-        }
-    }
-
     public function setPaging(int $paging): self
     {
-        $this->paging = $paging;
+        $this->paging = (int) $paging;
         if ($this->page) {
             $this->setPagingLimitOffset();
         }
@@ -149,7 +125,7 @@ class Select extends Query implements SelectInterface
 
     public function forUpdate(bool $enable = true): self
     {
-        $this->for_update = $enable;
+        $this->for_update = (bool) $enable;
         return $this;
     }
 
@@ -164,10 +140,37 @@ class Select extends Query implements SelectInterface
         return $this->hasFlag('DISTINCT');
     }
 
+    public function cols(array $cols): self
+    {
+        foreach ($cols as $key => $val) {
+            $this->addCol($key, $val);
+        }
+        return $this;
+    }
+
+    /**
+     * Adds a column and alias to the columns to be selected.
+     *
+     * @param mixed $key If an integer, ignored. Otherwise, the column to be
+     *                   added.
+     * @param mixed $val if $key was an integer, the column to be added;
+     *                   otherwise, the column alias
+     */
+    protected function addCol(string|int $key, mixed $val): void
+    {
+        if (\is_string($key)) {
+            // [col => alias]
+            $this->cols[$val] = $key;
+        } else {
+            $this->addColWithAlias($val);
+        }
+    }
+
     /**
      * Adds a column with an alias to the columns to be selected.
      *
-     * @param string $spec the column specification: "col alias", "col AS alias", or something else entirely
+     * @param string $spec the column specification: "col alias",
+     *                     "col AS alias", or something else entirely
      */
     protected function addColWithAlias(string $spec): void
     {
@@ -185,34 +188,11 @@ class Select extends Query implements SelectInterface
         }
     }
 
-    /**
-     * Adds a column and alias to the columns to be selected.
-     *
-     * @param string|int $key If an integer, ignored. Otherwise, the column to be added.
-     * @param string     $val if $key was an integer, the column to be added; otherwise, the column alias
-     */
-    protected function addCol(string|int $key, string $val): void
-    {
-        if (\is_string($key)) {
-            // [col => alias]
-            $this->cols[$val] = $key;
-        } else {
-            $this->addColWithAlias($val);
-        }
-    }
-
-    public function cols(array $cols): self
-    {
-        foreach ($cols as $key => $val) {
-            $this->addCol($key, $val);
-        }
-        return $this;
-    }
-
     public function removeCol(string $alias): bool
     {
         if (isset($this->cols[$alias])) {
             unset($this->cols[$alias]);
+
             return true;
         }
 
@@ -227,12 +207,12 @@ class Select extends Query implements SelectInterface
 
     public function hasCol(string $alias): bool
     {
-        return isset($this->cols[$alias]) || \in_array($alias, $this->cols);
+        return isset($this->cols[$alias]) || false !== \array_search($alias, $this->cols);
     }
 
     public function hasCols(): bool
     {
-        return ! empty($this->cols);
+        return (bool) $this->cols;
     }
 
     public function getCols(): array
@@ -246,7 +226,7 @@ class Select extends Query implements SelectInterface
      * @param string $type FROM, JOIN, etc
      * @param string $spec the table and alias name
      *
-     * @throws Exception when the reference has already been used
+     * @throws AuraSqlQueryException when the reference has already been used
      */
     protected function addTableRef(string $type, string $spec): void
     {
@@ -265,18 +245,6 @@ class Select extends Query implements SelectInterface
         $this->table_refs[$name] = "{$type} {$spec}";
     }
 
-    /**
-     * Adds to the $from property and increments the key count.
-     *
-     * @param string $spec the table specification
-     */
-    protected function addFrom(string $spec): self
-    {
-        $this->from[] = [$spec];
-        $this->from_key++;
-        return $this;
-    }
-
     public function from(string $spec): self
     {
         $this->addTableRef('FROM', $spec);
@@ -290,14 +258,35 @@ class Select extends Query implements SelectInterface
     }
 
     /**
-     * Formats a sub-SELECT statement, binding values from a Select object as needed.
+     * Adds to the $from property and increments the key count.
      *
-     * retrun the sub-SELECT string
+     * @param string $spec the table specification
+     */
+    protected function addFrom(string $spec): self
+    {
+        $this->from[] = [$spec];
+        $this->from_key++;
+        return $this;
+    }
+
+    public function fromSubSelect(string|SelectInterface $spec, string $name): self
+    {
+        $this->addTableRef('FROM (SELECT ...) AS', $name);
+        $spec = $this->subSelect($spec, '        ');
+        $name = $this->quoter->quoteName($name);
+        return $this->addFrom("({$spec}    ) AS {$name}");
+    }
+
+    /**
+     * Formats a sub-SELECT statement, binding values from a Select object as
+     * needed.
+     *
+     * return the sub-SELECT string
      *
      * @param string|SelectInterface $spec   a sub-SELECT specification
      * @param string                 $indent indent each line with this string
      */
-    protected function subSelect($spec, string $indent): string
+    protected function subSelect(string|SelectInterface $spec, string $indent): string
     {
         if ($spec instanceof SelectInterface) {
             $this->bindValues($spec->getBindValues());
@@ -308,23 +297,26 @@ class Select extends Query implements SelectInterface
             . \PHP_EOL;
     }
 
-    public function fromSubSelect(mixed $spec, string $name): self
+    public function join(string $join, string $spec, ?string $cond = null, array $bind = []): self
     {
-        $this->addTableRef('FROM (SELECT ...) AS', $name);
-        $spec = $this->subSelect($spec, '        ');
-        $name = $this->quoter->quoteName($name);
-        return $this->addFrom("({$spec}    ) AS {$name}");
+        $join = \mb_strtoupper(\ltrim("{$join} JOIN"));
+        $this->addTableRef($join, $spec);
+
+        $spec = $this->quoter->quoteName($spec);
+        $cond = $this->fixJoinCondition($cond, $bind);
+        return $this->addJoin(\rtrim("{$join} {$spec} {$cond}"));
     }
 
     /**
-     * Fixes a JOIN condition to quote names in the condition and prefix it with a condition type ('ON' is the default and 'USING' is recognized).
+     * Fixes a JOIN condition to quote names in the condition and prefix it
+     * with a condition type ('ON' is the default and 'USING' is recognized).
      *
-     * @param string|null $cond join on this condition
-     * @param array       $bind values to bind to ?-placeholders in the condition
+     * @param ?string             $cond join on this condition
+     * @param array<string,mixed> $bind values to bind to ?-placeholders in the condition
      */
     protected function fixJoinCondition(?string $cond, array $bind): string
     {
-        if (null === $cond) {
+        if (! $cond) {
             return '';
         }
 
@@ -342,28 +334,6 @@ class Select extends Query implements SelectInterface
         return 'ON ' . $cond;
     }
 
-    /**
-     * Adds the JOIN to the right place, given whether or not a FROM has been specified yet.
-     *
-     * @param string $spec the JOIN clause
-     */
-    protected function addJoin(string $spec): self
-    {
-        $from_key = (-1 == $this->from_key) ? 0 : $this->from_key;
-        $this->join[$from_key][] = $spec;
-        return $this;
-    }
-
-    public function join(string $join, string $spec, ?string $cond = null, array $bind = []): self
-    {
-        $join = \mb_strtoupper(\ltrim("{$join} JOIN"));
-        $this->addTableRef($join, $spec);
-
-        $spec = $this->quoter->quoteName($spec);
-        $cond = $this->fixJoinCondition($cond, $bind);
-        return $this->addJoin(\rtrim("{$join} {$spec} {$cond}"));
-    }
-
     public function innerJoin(string $spec, ?string $cond = null, array $bind = []): self
     {
         return $this->join('INNER', $spec, $cond, $bind);
@@ -374,7 +344,7 @@ class Select extends Query implements SelectInterface
         return $this->join('LEFT', $spec, $cond, $bind);
     }
 
-    public function joinSubSelect(string $join, $spec, string $name, ?string $cond = null, array $bind = []): self
+    public function joinSubSelect(string $join, string|SelectInterface $spec, string $name, ?string $cond = null, array $bind = []): self
     {
         $join = \mb_strtoupper(\ltrim("{$join} JOIN"));
         $this->addTableRef("{$join} (SELECT ...) AS", $name);
@@ -385,6 +355,19 @@ class Select extends Query implements SelectInterface
 
         $text = \rtrim("{$join} ({$spec}        ) AS {$name} {$cond}");
         return $this->addJoin('        ' . $text);
+    }
+
+    /**
+     * Adds the JOIN to the right place, given whether or not a FROM has been
+     * specified yet.
+     *
+     * @param string $spec the JOIN clause
+     */
+    protected function addJoin(string $spec): self
+    {
+        $from_key = (-1 == $this->from_key) ? 0 : $this->from_key;
+        $this->join[$from_key][] = $spec;
+        return $this;
     }
 
     public function groupBy(array $spec): self
@@ -409,9 +392,22 @@ class Select extends Query implements SelectInterface
 
     public function page(int $page): self
     {
-        $this->page = $page;
+        $this->page = (int) $page;
         $this->setPagingLimitOffset();
         return $this;
+    }
+
+    /**
+     * Updates the limit and offset values when changing pagination.
+     */
+    protected function setPagingLimitOffset(): void
+    {
+        $this->setLimit(0);
+        $this->setOffset(0);
+        if ($this->page) {
+            $this->setLimit($this->paging);
+            $this->setOffset($this->paging * ($this->page - 1));
+        }
     }
 
     public function getPage(): int
@@ -516,6 +512,11 @@ class Select extends Query implements SelectInterface
             . $this->builder->buildForUpdate($this->for_update);
     }
 
+    /**
+     * Sets a limit count on the query.
+     *
+     * @param int $limit the number of rows to select
+     */
     public function limit(int $limit): self
     {
         $this->setLimit($limit);
@@ -523,10 +524,14 @@ class Select extends Query implements SelectInterface
             $this->page = 0;
             $this->setOffset(0);
         }
-
         return $this;
     }
 
+    /**
+     * Sets a limit offset on the query.
+     *
+     * @param int $offset start returning after this many rows
+     */
     public function offset(int $offset): self
     {
         $this->setOffset($offset);
@@ -534,7 +539,11 @@ class Select extends Query implements SelectInterface
             $this->page = 0;
             $this->setLimit(0);
         }
-
         return $this;
+    }
+
+    public function orderBy(array $spec): self
+    {
+        return $this->addOrderBy($spec);
     }
 }

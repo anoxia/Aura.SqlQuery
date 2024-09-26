@@ -10,15 +10,13 @@ declare(strict_types=1);
 namespace Aura\SqlQuery\Common;
 
 use Aura\SqlQuery\AuraSqlQueryException;
-use Aura\SqlQuery\Common\Basic\Builder;
-use Aura\SqlQuery\Common\Basic\BuilderInterface;
 
 /**
  * Common SELECT builder.
  *
  * @package Aura.SqlQuery
  */
-class SelectBuilder extends Builder implements BuilderInterface
+class SelectBuilder extends Builder
 {
     /**
      * Builds the columns portion of the SELECT.
@@ -38,8 +36,8 @@ class SelectBuilder extends Builder implements BuilderInterface
     /**
      * Builds the FROM clause.
      *
-     * @param array $from the FROM elements
-     * @param array $join the JOIN elements
+     * @param string[] $from the FROM elements
+     * @param string[] $join the JOIN elements
      */
     public function buildFrom(array $from, array $join): string
     {
@@ -60,7 +58,7 @@ class SelectBuilder extends Builder implements BuilderInterface
     /**
      * Builds the GROUP BY clause.
      *
-     * @param array $group_by the GROUP BY elements
+     * @param string[] $group_by the GROUP BY elements
      */
     public function buildGroupBy(array $group_by): string
     {
@@ -74,7 +72,7 @@ class SelectBuilder extends Builder implements BuilderInterface
     /**
      * Builds the HAVING clause.
      *
-     * @param array $having the HAVING elements
+     * @param string[] $having the HAVING elements
      */
     public function buildHaving(array $having): string
     {
@@ -90,7 +88,7 @@ class SelectBuilder extends Builder implements BuilderInterface
      *
      * @param bool $for_update true if FOR UPDATE, false if not
      */
-    public function buildForUpdate($for_update): string
+    public function buildForUpdate(bool $for_update): string
     {
         if (! $for_update) {
             return ''; // not applicable

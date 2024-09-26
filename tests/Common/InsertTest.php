@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Aura\SqlQuery\Common;
 
 use Aura\SqlQuery\AuraSqlQueryException;
-use Aura\SqlQuery\Common\Basic\QueryTest;
+use Aura\SqlQuery\Common\QueryTest;
 
 class InsertTest extends QueryTest
 {
-    protected string $query_type = 'insert';
+    protected string $query_type = 'Insert';
 
     protected function newQuery()
     {
@@ -151,7 +151,7 @@ EOD;
         // failed to add c3, should blow up
 
         $this->expectException(
-            \Aura\SqlQuery\AuraSqlQueryException::class,
+            AuraSqlQueryException::class,
             $this->requoteIdentifiers('Column <<c3>> missing from row 1.'),
         );
         $this->query->addRow();

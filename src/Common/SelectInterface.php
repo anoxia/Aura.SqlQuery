@@ -9,25 +9,14 @@ declare(strict_types=1);
 
 namespace Aura\SqlQuery\Common;
 
-use Aura\SqlQuery\Common\Basic\ColumnsInterface;
-use Aura\SqlQuery\Common\Basic\LimitOffsetInterface;
-use Aura\SqlQuery\Common\Basic\OrderByInterface;
-use Aura\SqlQuery\Common\Basic\StatementInterface;
-use Aura\SqlQuery\Common\Basic\ValuesInterface;
-use Aura\SqlQuery\Common\Basic\WhereInterface;
+use Aura\SqlQuery\AuraSqlQueryException;
 
 /**
  * An interface for SELECT queries.
  *
  * @package Aura.SqlQuery
  */
-interface SelectInterface extends
-    ValuesInterface,
-    ColumnsInterface,
-    WhereInterface,
-    OrderByInterface,
-    LimitOffsetInterface,
-    StatementInterface
+interface SelectInterface extends QueryInterface, WhereInterface, OrderByInterface, LimitOffsetInterface
 {
     /**
      * Sets the number of rows per page.
@@ -38,22 +27,22 @@ interface SelectInterface extends
 
     /**
      * Gets the number of rows per page.
-     *
-     * return the number of rows per page
      */
     public function getPaging(): int;
 
     /**
      * Makes the select FOR UPDATE (or not).
      *
-     * @param bool $enable whether or not the SELECT is FOR UPDATE (default true)
+     * @param bool $enable whether or not the SELECT is FOR UPDATE (default
+     *                     true)
      */
     public function forUpdate(bool $enable = true): self;
 
     /**
      * Makes the select DISTINCT (or not).
      *
-     * @param bool $enable whether or not the SELECT is DISTINCT (default true)
+     * @param bool $enable whether or not the SELECT is DISTINCT (default
+     *                     true)
      */
     public function distinct(bool $enable = true): self;
 
@@ -65,9 +54,10 @@ interface SelectInterface extends
     /**
      * Adds columns to the query.
      *
-     * Multiple calls to cols() will append to the list of columns, not overwrite the previous columns.
+     * Multiple calls to cols() will append to the list of columns, not
+     * overwrite the previous columns.
      *
-     * @param array $cols the column(s) to add to the query
+     * @param string[] $cols the column(s) to add to the query
      */
     public function cols(array $cols): self;
 
@@ -105,7 +95,8 @@ interface SelectInterface extends
     public function from(string $spec): self;
 
     /**
-     * Adds a raw unquoted FROM element to the query; useful for adding FROM elements that are functions.
+     * Adds a raw unquoted FROM element to the query; useful for adding FROM
+     * elements that are functions.
      *
      * @param string $spec The table specification, e.g. "function_name()".
      */
@@ -114,10 +105,11 @@ interface SelectInterface extends
     /**
      * Adds an aliased sub-select to the query.
      *
-     * @param string|SelectInterface $spec if a Select object, use as the sub-select; if a string, the sub-select string
+     * @param string|SelectInterface $spec if a Select object, use as the sub-select;
+     *                                     if a string, the sub-select string
      * @param string                 $name the alias name for the sub-select
      */
-    public function fromSubSelect(mixed $spec, string $name): self;
+    public function fromSubSelect(string|self $spec, string $name): self;
 
     /**
      * Adds a JOIN table and columns to the query.
@@ -126,6 +118,8 @@ interface SelectInterface extends
      * @param string              $spec the table specification; "foo" or "foo AS bar"
      * @param ?string             $cond join on this condition
      * @param array<string,mixed> $bind values to bind to ?-placeholders in the condition
+     *
+     * @throws AuraSqlQueryException
      */
     public function join(string $join, string $spec, ?string $cond = null, array $bind = []): self;
 
@@ -133,10 +127,10 @@ interface SelectInterface extends
      * Adds a INNER JOIN table and columns to the query.
      *
      * @param string              $spec the table specification; "foo" or "foo AS bar"
-     * @param string|null         $cond join on this condition
+     * @param string              $cond join on this condition
      * @param array<string,mixed> $bind values to bind to ?-placeholders in the condition
      *
-     * @throws \Exception
+     * @throws AuraSqlQueryException
      */
     public function innerJoin(string $spec, ?string $cond = null, array $bind = []): self;
 
@@ -147,7 +141,7 @@ interface SelectInterface extends
      * @param ?string             $cond join on this condition
      * @param array<string,mixed> $bind values to bind to ?-placeholders in the condition
      *
-     * @throws \Exception
+     * @throws AuraSqlQueryException
      */
     public function leftJoin(string $spec, ?string $cond = null, array $bind = []): self;
 
@@ -155,12 +149,16 @@ interface SelectInterface extends
      * Adds a JOIN to an aliased subselect and columns to the query.
      *
      * @param string                 $join the join type: inner, left, natural, etc
-     * @param string|SelectInterface $spec if a Select object, use as the sub-select; if a string, the sub-select command string
+     * @param string|SelectInterface $spec if a Select
+     *                                     object, use as the sub-select; if a string, the sub-select
+     *                                     command string
      * @param string                 $name the alias name for the sub-select
      * @param ?string                $cond join on this condition
      * @param array<string,mixed>    $bind values to bind to ?-placeholders in the condition
+     *
+     * @throws AuraSqlQueryException
      */
-    public function joinSubSelect(string $join, mixed $spec, string $name, ?string $cond = null, array $bind = []): self;
+    public function joinSubSelect(string $join, string|self $spec, string $name, ?string $cond = null, array $bind = []): self;
 
     /**
      * Adds grouping to the query.
@@ -172,16 +170,16 @@ interface SelectInterface extends
     /**
      * Adds a HAVING condition to the query by AND.
      *
-     * @param callable|string $cond the HAVING condition
-     * @param array           $bind values to be bound to placeholders
+     * @param callable|string              $cond the HAVING condition
+     * @param array<string,mixed> $bind values to be bound to placeholders
      */
     public function having(callable|string $cond, array $bind = []): self;
 
     /**
      * Adds a HAVING condition to the query by OR.
      *
-     * @param callable|string $cond the HAVING condition
-     * @param array           $bind values to be bound to placeholders
+     * @param callable|string              $cond the HAVING condition
+     * @param array<string,mixed> $bind values to be bound to placeholders
      *
      * @see having()
      */
@@ -200,12 +198,14 @@ interface SelectInterface extends
     public function getPage(): int;
 
     /**
-     * Takes the current select properties and retains them, then sets UNION for the next set of properties.
+     * Takes the current select properties and retains them, then sets
+     * UNION for the next set of properties.
      */
     public function union(): self;
 
     /**
-     * Takes the current select properties and retains them, then sets UNION ALL for the next set of properties.
+     * Takes the current select properties and retains them, then sets
+     * UNION ALL for the next set of properties.
      */
     public function unionAll(): self;
 

@@ -16,7 +16,7 @@ class QueryFactoryTest extends TestCase
      * @param mixed $query_type
      * @param mixed $expect
      */
-    public function test($db_type, $common, $query_type, $expect): void
+    public function test_Instance($db_type, $common, $query_type, $expect): void
     {
         $query_factory = new QueryFactory($db_type, $common);
         $method = 'new' . $query_type;
@@ -27,30 +27,34 @@ class QueryFactoryTest extends TestCase
     /**
      * @return array<int,array<int,mixed>>
      */
-    public function provider(): array
+    public static function provider(): array
     {
         return [
             // db-specific
-            ['Common', false, 'Select', Common\Select::class],
-            ['Common', false, 'Insert', Common\Insert::class],
-            ['Common', false, 'Update', Common\Update::class],
-            ['Common', false, 'Delete', Common\Delete::class],
-            ['Mysql', false, 'Select', Mysql\Select::class],
-            ['Mysql', false, 'Insert', Mysql\Insert::class],
-            ['Mysql', false, 'Update', Mysql\Update::class],
-            ['Mysql', false, 'Delete', Mysql\Delete::class],
-            ['Pgsql', false, 'Select', Pgsql\Select::class],
-            ['Pgsql', false, 'Insert', Pgsql\Insert::class],
-            ['Pgsql', false, 'Update', Pgsql\Update::class],
-            ['Pgsql', false, 'Delete', Pgsql\Delete::class],
-            ['Sqlite', false, 'Select', Sqlite\Select::class],
-            ['Sqlite', false, 'Insert', Sqlite\Insert::class],
-            ['Sqlite', false, 'Update', Sqlite\Update::class],
-            ['Sqlite', false, 'Delete', Sqlite\Delete::class],
-            ['Sqlsrv', false, 'Select', Sqlsrv\Select::class],
-            ['Sqlsrv', false, 'Insert', Sqlsrv\Insert::class],
-            ['Sqlsrv', false, 'Update', Sqlsrv\Update::class],
-            ['Sqlsrv', false, 'Delete', Sqlsrv\Delete::class],
+            ['Common', '', 'Select', Common\Select::class],
+            ['Common', '', 'Insert', Common\Insert::class],
+            ['Common', '', 'Update', Common\Update::class],
+            ['Common', '', 'Delete', Common\Delete::class],
+            ['Mysql', '', 'Select', Mysql\Select::class],
+            ['Mysql', '', 'Insert', Mysql\Insert::class],
+            ['Mysql', '', 'Update', Mysql\Update::class],
+            ['Mysql', '', 'Delete', Mysql\Delete::class],
+            ['Pgsql', '', 'Select', Postgres\Select::class],
+            ['Pgsql', '', 'Insert', Postgres\Insert::class],
+            ['Pgsql', '', 'Update', Postgres\Update::class],
+            ['Pgsql', '', 'Delete', Postgres\Delete::class],
+            ['postgres', '', 'Select', Postgres\Select::class],
+            ['postgres', '', 'Insert', Postgres\Insert::class],
+            ['postgres', '', 'Update', Postgres\Update::class],
+            ['postgres', '', 'Delete', Postgres\Delete::class],
+            ['Sqlite', '', 'Select', SQLite\Select::class],
+            ['Sqlite', '', 'Insert', SQLite\Insert::class],
+            ['Sqlite', '', 'Update', SQLite\Update::class],
+            ['Sqlite', '', 'Delete', SQLite\Delete::class],
+            ['Sqlsrv', '', 'Select', SQLServer\Select::class],
+            ['Sqlsrv', '', 'Insert', SQLServer\Insert::class],
+            ['Sqlsrv', '', 'Update', SQLServer\Update::class],
+            ['Sqlsrv', '', 'Delete', SQLServer\Delete::class],
 
             // force common
             ['Common', QueryFactory::COMMON, 'Select', Common\Select::class],
